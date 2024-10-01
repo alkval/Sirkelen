@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirkelen", "Sirkelen\Sirkelen.csproj", "{D7FA3170-0F93-49A2-B3A6-BB494FBEE8FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirkelen.Web", "Sirkelen.Web\Sirkelen.Web.csproj", "{47A7E578-9873-443C-84FC-CEAB6DE1D4E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sirkelen.Shared", "Sirkelen.Shared\Sirkelen.Shared.csproj", "{A4C49EA9-5CDD-44F8-9F02-24D59C401258}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,13 @@ Global
 		{D7FA3170-0F93-49A2-B3A6-BB494FBEE8FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7FA3170-0F93-49A2-B3A6-BB494FBEE8FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7FA3170-0F93-49A2-B3A6-BB494FBEE8FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A7E578-9873-443C-84FC-CEAB6DE1D4E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A7E578-9873-443C-84FC-CEAB6DE1D4E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A7E578-9873-443C-84FC-CEAB6DE1D4E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A7E578-9873-443C-84FC-CEAB6DE1D4E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C49EA9-5CDD-44F8-9F02-24D59C401258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C49EA9-5CDD-44F8-9F02-24D59C401258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C49EA9-5CDD-44F8-9F02-24D59C401258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C49EA9-5CDD-44F8-9F02-24D59C401258}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

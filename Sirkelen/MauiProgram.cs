@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sirkelen;
 
@@ -14,7 +15,16 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
 
+		builder.Services.AddDbContext<SirkelenContext>(options =>
+		{
+			options.UseSqlite("Data Source=sirkelen.db");
+		});
 		builder.Services.AddMauiBlazorWebView();
+		builder.Services.AddScoped<IUserService, UserService>();
+		builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
+		builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
+		builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
+
 
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
