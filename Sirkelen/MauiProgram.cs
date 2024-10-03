@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
+using Sirkelen.Shared.Components;
+using Android.App.Roles;
 
 namespace Sirkelen;
 
@@ -32,7 +34,10 @@ public static class MauiProgram
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();
 #endif
+#pragma warning disable CA1416 // Validate platform compatibility
+        builder.Services.AddSingleton<RoleManager>();
+#pragma warning restore CA1416 // Validate platform compatibility
 
-		return builder.Build();
+        return builder.Build();
 	}
 }

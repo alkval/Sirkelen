@@ -1,4 +1,5 @@
-@inject NavigationManager NavigationManager
+@namespace Sirkelen.Shared.Components
+@* @inject NavigationManager NavigationManager
 @inject IMessageService MessageService
 @implements IAsyncDisposable
 
@@ -42,4 +43,4 @@
             await hubConnection.DisposeAsync();
         }
     }
-}
+} *@

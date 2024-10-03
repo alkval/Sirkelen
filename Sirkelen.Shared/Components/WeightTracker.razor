@@ -1,3 +1,5 @@
+@namespace Sirkelen.Shared.Components
+@using Sirkelen.Shared.Services
 @inject IWeightRecordService WeightRecordService
 
 <h3>Weight Tracker</h3>
@@ -11,11 +13,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // Fetch weight records
+        WeightRecords = await WeightRecordService.GetWeightRecordsAsync(UserId);
+
     }
 
-    private async Task AddWeightRecord(decimal weight)
+    private async Task AddWeightRecord()
     {
-        // Add new weight record
+        // Add weight record
     }
 }

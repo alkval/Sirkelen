@@ -1,3 +1,4 @@
+@namespace Sirkelen.Shared.Components
 @inject IUserService UserService
 
 <h3>@User.Name's Profile</h3>
@@ -11,6 +12,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        User = await UserService.GetUserByIdAsync(UserId);
+        User = await UserService.GetUserAsync(UserId);
     }
 }
