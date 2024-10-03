@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.EntityFrameworkCore;
+
 public class UserService(SirkelenContext context) : IUserService
 {
     public async Task<User> GetUserAsync(Guid id)
@@ -5,5 +8,27 @@ public class UserService(SirkelenContext context) : IUserService
         return await context.Users.FindAsync(id);
     }
 
-    // TODO Implement the rest of the methods
+    public async Task<List<User>> GetAllUsersAsync()
+    {
+        return await context.Users.ToListAsync();
+    }
+
+    public async Task<User> UpdateUserAsync(User user)
+    {
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
+        return user;
+    }
+
+    public async Task<User> DeleteUserAsync(Guid id)
+    {
+        var user = await context.Users.FindAsync(id);
+        if (user != null)
+        {
+            context.Users.Remove(user);
+            await context.SaveChangesAsync();
+            return user;
+        }
+        throw new Exception("User not found");
+    }
 }

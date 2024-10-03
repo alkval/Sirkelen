@@ -1,16 +1,24 @@
 {
   "version": 2,
-  "dgSpecHash": "zETXKItT7ng=",
+  "dgSpecHash": "u/+xpAXX1As=",
   "success": true,
   "projectFilePath": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Sirkelen.Web.csproj",
   "expectedPackageFiles": [
+    "/Users/alexanderkvalvaag/.nuget/packages/bcrypt.net-next/4.0.3/bcrypt.net-next.4.0.3.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/humanizer.core/2.14.1/humanizer.core.2.14.1.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.authorization/8.0.8/microsoft.aspnetcore.authorization.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.components/8.0.8/microsoft.aspnetcore.components.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.components.analyzers/8.0.8/microsoft.aspnetcore.components.analyzers.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.components.forms/8.0.8/microsoft.aspnetcore.components.forms.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.components.web/8.0.8/microsoft.aspnetcore.components.web.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.connections.abstractions/8.0.8/microsoft.aspnetcore.connections.abstractions.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.http.connections.client/8.0.8/microsoft.aspnetcore.http.connections.client.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.http.connections.common/8.0.8/microsoft.aspnetcore.http.connections.common.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.metadata/8.0.8/microsoft.aspnetcore.metadata.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.signalr.client/8.0.8/microsoft.aspnetcore.signalr.client.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.signalr.client.core/8.0.8/microsoft.aspnetcore.signalr.client.core.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.signalr.common/8.0.8/microsoft.aspnetcore.signalr.common.8.0.8.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.aspnetcore.signalr.protocols.json/8.0.8/microsoft.aspnetcore.signalr.protocols.json.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.bcl.asyncinterfaces/6.0.0/microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.codeanalysis.analyzers/3.3.3/microsoft.codeanalysis.analyzers.3.3.3.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.codeanalysis.common/4.5.0/microsoft.codeanalysis.common.4.5.0.nupkg.sha512",
@@ -32,6 +40,7 @@
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.dependencyinjection/8.0.0/microsoft.extensions.dependencyinjection.8.0.0.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.1/microsoft.extensions.dependencyinjection.abstractions.8.0.1.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.dependencymodel/8.0.1/microsoft.extensions.dependencymodel.8.0.1.nupkg.sha512",
+    "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.features/8.0.8/microsoft.extensions.features.8.0.8.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.logging/8.0.0/microsoft.extensions.logging.8.0.0.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.1/microsoft.extensions.logging.abstractions.8.0.1.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/microsoft.extensions.options/8.0.2/microsoft.extensions.options.8.0.2.nupkg.sha512",
@@ -57,7 +66,7 @@
     "/Users/alexanderkvalvaag/.nuget/packages/system.text.encoding.codepages/6.0.0/system.text.encoding.codepages.6.0.0.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/system.text.encodings.web/8.0.0/system.text.encodings.web.8.0.0.nupkg.sha512",
     "/Users/alexanderkvalvaag/.nuget/packages/system.text.json/8.0.4/system.text.json.8.0.4.nupkg.sha512",
-    "/Users/alexanderkvalvaag/.nuget/packages/system.threading.channels/6.0.0/system.threading.channels.6.0.0.nupkg.sha512"
+    "/Users/alexanderkvalvaag/.nuget/packages/system.threading.channels/8.0.0/system.threading.channels.8.0.0.nupkg.sha512"
   ],
   "logs": []
 }

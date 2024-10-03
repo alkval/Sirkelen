@@ -1,0 +1,16 @@
+@inject IUserService UserService
+
+<h3>@User.Name's Profile</h3>
+<!-- Add user profile details here -->
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private User User { get; set; } = new User();
+
+    protected override async Task OnInitializedAsync()
+    {
+        User = await UserService.GetUserByIdAsync(UserId);
+    }
+}

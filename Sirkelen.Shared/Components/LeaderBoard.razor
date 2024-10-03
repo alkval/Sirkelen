@@ -1,0 +1,13 @@
+@inject IPersonalRecordService PersonalRecordService
+
+<h3>Leader Board</h3>
+<!-- Add leaderboard UI here -->
+
+@code {
+    private List<PersonalRecord> TopRecords { get; set; } = new List<PersonalRecord>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch top records
+    }
+}

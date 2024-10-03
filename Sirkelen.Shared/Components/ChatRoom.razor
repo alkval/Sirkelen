@@ -1,0 +1,45 @@
+@inject NavigationManager NavigationManager
+@inject IMessageService MessageService
+@implements IAsyncDisposable
+
+<h3>Chat Room</h3>
+<!-- Add chat UI here -->
+
+@code {
+    private HubConnection hubConnection;
+    private List<Messages> messages = new List<Messages>();
+    private string userInput;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+            .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
+            .Build();
+
+        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
+        {
+            var encodedMsg = $"{user}: {message}";
+            messages.Add(new Messages { /* populate properties */ });
+            InvokeAsync(StateHasChanged);
+        });
+
+        await hubConnection.StartAsync();
+    }
+
+    private async Task Send()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.SendAsync("SendMessage", "User", userInput);
+            userInput = string.Empty;
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (hubConnection is not null)
+        {
+            await hubConnection.DisposeAsync();
+        }
+    }
+}

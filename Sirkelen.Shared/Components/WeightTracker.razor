@@ -1,0 +1,21 @@
+@inject IWeightRecordService WeightRecordService
+
+<h3>Weight Tracker</h3>
+<!-- Add weight tracking UI here -->
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch weight records
+    }
+
+    private async Task AddWeightRecord(decimal weight)
+    {
+        // Add new weight record
+    }
+}

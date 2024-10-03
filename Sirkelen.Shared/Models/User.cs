@@ -29,8 +29,6 @@ public class User
     public List<PersonalRecord> PersonalRecords { get; set; } = new List<PersonalRecord>();
     public List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
 
-    public List<User> Friends { get; set; } = new List<User>();
-
     [Required]
     public bool IsAdmin { get; set; } = false;
 

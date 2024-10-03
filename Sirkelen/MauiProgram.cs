@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Sirkelen;
 
@@ -19,11 +20,12 @@ public static class MauiProgram
 		{
 			options.UseSqlite("Data Source=sirkelen.db");
 		});
+		builder.Services.AddSingleton<ChatService>();
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddScoped<IUserService, UserService>();
-		builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
-		builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
-		builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
+		// builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
+		// builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
+		// builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
 
 
 #if DEBUG

@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Sirkelen.Web.Components;
+using Microsoft.AspNetCore.SignalR;
+using Sirkelen.Shared.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,10 +13,13 @@ builder.Services.AddDbContext<SirkelenContext>(options =>
 {
     options.UseSqlite("Data Source=sirkelen.db");
 });
+builder.Services.AddSignalR();
+
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
-builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
-builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
+//builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
+//builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
+//builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
+builder.Services.AddScoped<IAuthenticationService, AuthenticationService>(); // TODO
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -27,7 +32,7 @@ if (!app.Environment.IsDevelopment())
 
 
 app.UseHttpsRedirection();
-
+app.MapHub<ChatHub>("/chathub");
 app.UseStaticFiles();
 app.UseAntiforgery();
 
