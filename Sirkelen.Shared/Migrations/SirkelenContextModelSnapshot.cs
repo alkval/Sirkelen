@@ -127,47 +127,47 @@ namespace Sirkelen.Shared.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4117473c-ec8a-4558-92a0-d4e81fd93979"),
+                            Id = new Guid("a12fa66c-0a51-44d9-af73-728b35596642"),
                             IsAdmin = true,
-                            JoinDate = new DateTime(2024, 10, 3, 18, 12, 42, 167, DateTimeKind.Local).AddTicks(5270),
+                            JoinDate = new DateTime(2024, 10, 4, 0, 31, 15, 733, DateTimeKind.Local).AddTicks(7650),
                             Name = "Alex",
-                            PasswordHash = "$2a$11$7BYgs2gUCqrhWus4S2kWo.itgGrBlsHPZFqqQBWbiwXiObEfMMQxm",
+                            PasswordHash = "$2a$11$zlttYoY/1Q6WJATLcgHADebaVx3O8ucX1aic9i4ruSgB9NlUqlsO2",
                             Username = "admin"
                         },
                         new
                         {
-                            Id = new Guid("13dd31fe-5f3b-4a5d-9a54-f7792258e343"),
+                            Id = new Guid("2a352af4-ca16-47d1-ac9a-b69b4dbb5e0f"),
                             IsAdmin = false,
-                            JoinDate = new DateTime(2024, 10, 3, 18, 12, 42, 316, DateTimeKind.Local).AddTicks(8100),
+                            JoinDate = new DateTime(2024, 10, 4, 0, 31, 15, 882, DateTimeKind.Local).AddTicks(590),
                             Name = "Atle",
-                            PasswordHash = "$2a$11$4dbrPjeuVTndNcit447J8OTXVHbR0RNqnUuMEZeE3EAlJxgTNSTmC",
+                            PasswordHash = "$2a$11$l4Ib1xjuH9dSUxriV4sz3.PJTUVPPFGRt71Bv5G.IFY0F1GzN7vz2",
                             Username = "atse02"
                         },
                         new
                         {
-                            Id = new Guid("01425677-1175-4b86-b52e-76efaabb2757"),
+                            Id = new Guid("ea02dde6-d7d8-41ec-8566-507a853a1b58"),
                             IsAdmin = false,
-                            JoinDate = new DateTime(2024, 10, 3, 18, 12, 42, 462, DateTimeKind.Local).AddTicks(7150),
+                            JoinDate = new DateTime(2024, 10, 4, 0, 31, 16, 28, DateTimeKind.Local).AddTicks(8120),
                             Name = "Brage",
-                            PasswordHash = "$2a$11$Sjito3vGqC/mqOHT6RI1jurQXTtyuqRgBXtF2WPSAyX6LITLOX4hi",
+                            PasswordHash = "$2a$11$a2SUyLX5NXgF2V/qmJ1tzudMYlXWlVh0aE9XuZyhW9tZrSZpGsTMu",
                             Username = "bragstern"
                         },
                         new
                         {
-                            Id = new Guid("4e431693-feb8-4a5f-b3e8-78920e576bc6"),
+                            Id = new Guid("56d877e4-316e-4b7d-a473-831c305c6e67"),
                             IsAdmin = false,
-                            JoinDate = new DateTime(2024, 10, 3, 18, 12, 42, 606, DateTimeKind.Local).AddTicks(8570),
+                            JoinDate = new DateTime(2024, 10, 4, 0, 31, 16, 172, DateTimeKind.Local).AddTicks(8920),
                             Name = "Sander",
-                            PasswordHash = "$2a$11$v2nyp3/luXeR/cuSDwrAl.3PRZrhm8RTKoam0RwNaadKAsA/k.t2W",
+                            PasswordHash = "$2a$11$AXKCRYeo3stBDUgLYyHPUeJXDIFj/Pd1Vuuyoh9gk3i4EyuF4YZEy",
                             Username = "sandercool"
                         },
                         new
                         {
-                            Id = new Guid("57b782cc-141b-4055-8ecd-9a48ee409709"),
+                            Id = new Guid("19d74b5a-b751-4662-9491-e9b0c77e5cc4"),
                             IsAdmin = false,
-                            JoinDate = new DateTime(2024, 10, 3, 18, 12, 42, 751, DateTimeKind.Local).AddTicks(670),
+                            JoinDate = new DateTime(2024, 10, 4, 0, 31, 16, 317, DateTimeKind.Local).AddTicks(720),
                             Name = "Vuong",
-                            PasswordHash = "$2a$11$/2fOZnf4BgFkWsWvjZIueeekAxP/INdeJqj/V9VUoXdLaQQLt6ft2",
+                            PasswordHash = "$2a$11$qf7BhAkMVaW/rIplo3KAv.C3DTnAas6EdImzY27fuZsgDDq8TEwvS",
                             Username = "vuonguyen"
                         });
                 });

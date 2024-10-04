@@ -22,20 +22,28 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3VudGVyLnJhem9y
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/ChatRoom.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9DaGF0Um9vbS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Error.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/LeaderBoard.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9MZWFkZXJCb2FyZC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Home.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWF0aGVyLnJhem9y
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/Members.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9NZW1iZXJzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/UserProfile.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Vc2VyUHJvZmlsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Pages/WeightTracker.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWlnaHRUcmFja2VyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Routes.razor]
@@ -45,11 +53,3 @@ build_metadata.AdditionalFiles.CssScope =
 [/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Layout/MainLayout.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-ll4lc2kpxp
-
-[/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/Components/Layout/NavMenu.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
-build_metadata.AdditionalFiles.CssScope = b-o1apcey0rz

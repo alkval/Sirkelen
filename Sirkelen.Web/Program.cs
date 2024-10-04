@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Sirkelen.Web.Components;
 using Microsoft.AspNetCore.SignalR;
 using Sirkelen.Shared.Hubs;
+using Sirkelen.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,15 +12,15 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<SirkelenContext>(options =>
 {
-    options.UseSqlite("Data Source=sirkelen.db");
+    options.UseSqlite("Data Source=../Sirkelen.Shared/sirkelen.db");
 });
 builder.Services.AddSignalR();
 
 builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
-//builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
+builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>();
+builder.Services.AddScoped<IWeightRecordService, WeightRecordService>();
 //builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
-builder.Services.AddScoped<IAuthenticationService, AuthenticationService>(); // TODO
+builder.Services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

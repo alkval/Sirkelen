@@ -1,0 +1,27 @@
+@page "/weight-tracker"
+@namespace Sirkelen.Shared.Components
+@using Sirkelen.Shared.Services
+@inject IWeightRecordService WeightRecordService
+
+<h3>Weight Tracker</h3>
+<!-- Add weight tracking UI here -->
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
+    
+    
+
+    protected override async Task OnInitializedAsync()
+    {
+        WeightRecords = await WeightRecordService.GetWeightRecordsAsync(UserId);
+
+    }
+
+    private async Task AddWeightRecord()
+    {
+        // Add weight record
+    }
+}

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "s36EYSkjfmtNu5ltp9dJ7RCSrVryZS+h/N9PZiB5vSM=",
+  "Hash": "2mNeZit4M4B4XhKhxW8MX0yU89Q/e3IIoVFmUZB6uLw=",
   "Source": "Sirkelen.Web",
   "BasePath": "_content/Sirkelen.Web",
   "Mode": "Default",
@@ -11,10 +11,10 @@
       "Version": 2,
       "Source": "Sirkelen.Shared",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishProperties": "",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildProperties": "",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
     }
   ],
@@ -112,25 +112,6 @@
       "OriginalItemSpec": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/obj/Debug/net8.0/scopedcss/bundle/Sirkelen.Web.styles.css"
     },
     {
-      "Identity": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/obj/Debug/net8.0/scopedcss/projectbundle/Sirkelen.Web.bundle.scp.css",
-      "SourceId": "Sirkelen.Web",
-      "SourceType": "Computed",
-      "ContentRoot": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/obj/Debug/net8.0/scopedcss/projectbundle/",
-      "BasePath": "_content/Sirkelen.Web",
-      "RelativePath": "Sirkelen.Web.bundle.scp.css",
-      "AssetKind": "All",
-      "AssetMode": "Reference",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ProjectBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/obj/Debug/net8.0/scopedcss/projectbundle/Sirkelen.Web.bundle.scp.css"
-    },
-    {
       "Identity": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/app.css",
       "SourceId": "Sirkelen.Web",
       "SourceType": "Discovered",
@@ -188,12 +169,12 @@
       "OriginalItemSpec": "wwwroot/bootstrap/bootstrap.min.css.map"
     },
     {
-      "Identity": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/favicon.png",
+      "Identity": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/favicon.svg",
       "SourceId": "Sirkelen.Web",
       "SourceType": "Discovered",
       "ContentRoot": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/",
       "BasePath": "_content/Sirkelen.Web",
-      "RelativePath": "favicon.png",
+      "RelativePath": "favicon.svg",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -204,7 +185,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/favicon.png"
+      "OriginalItemSpec": "wwwroot/favicon.svg"
     }
   ]
 }

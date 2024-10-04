@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.SignalR;
 using Sirkelen.Shared.Components;
 using Android.App.Roles;
+using Sirkelen.Shared.Services;
 
 namespace Sirkelen;
 
@@ -20,13 +21,13 @@ public static class MauiProgram
 
 		builder.Services.AddDbContext<SirkelenContext>(options =>
 		{
-			options.UseSqlite("Data Source=sirkelen.db");
+			options.UseSqlite("Data Source=../Sirkelen.Shared/sirkelen.db");
 		});
 		builder.Services.AddSingleton<ChatService>();
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddScoped<IUserService, UserService>();
-		// builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
-		// builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
+		builder.Services.AddScoped<IPersonalRecordService, PersonalRecordService>(); // TODO
+		builder.Services.AddScoped<IWeightRecordService, WeightRecordService>(); // TODO
 		// builder.Services.AddScoped<IMessageService, MessageService>(); // TODO
 
 
