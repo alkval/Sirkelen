@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Sirkelen.Shared.Models;
 
+namespace Sirkelen.Shared.infrastructure.Data;
 public class SirkelenContext : DbContext
 {
     public DbSet<User> Users { get; set; }
@@ -16,7 +18,6 @@ public class SirkelenContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configure relationships
         modelBuilder.Entity<User>()
             .HasMany(u => u.PersonalRecords)
             .WithOne(pr => pr.User)
@@ -35,13 +36,5 @@ public class SirkelenContext : DbContext
             new User { Id = Guid.NewGuid(), Name = "Vuong", Username = "vuonguyen", PasswordHash = BCrypt.Net.BCrypt.HashPassword("vuonguyen"), JoinDate = DateTime.Now, IsAdmin = false }
 
         );
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            optionsBuilder.UseSqlite("Data Source=sirkelen.db");
-        }
     }
 }

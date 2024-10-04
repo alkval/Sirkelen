@@ -13,10 +13,6 @@
       "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css.map"
     },
     {
-      "Id": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/favicon.svg",
-      "PackagePath": "staticwebassets/favicon.svg"
-    },
-    {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Sirkelen.Web.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

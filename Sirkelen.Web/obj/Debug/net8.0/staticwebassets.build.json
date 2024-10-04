@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2mNeZit4M4B4XhKhxW8MX0yU89Q/e3IIoVFmUZB6uLw=",
+  "Hash": "ot4NTnSJRJTUcXueesK3ZhFIrw3e7eWkiM3vGb2Y1sg=",
   "Source": "Sirkelen.Web",
   "BasePath": "_content/Sirkelen.Web",
   "Mode": "Default",
@@ -11,10 +11,10 @@
       "Version": 2,
       "Source": "Sirkelen.Shared",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
     }
   ],
@@ -167,25 +167,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/bootstrap/bootstrap.min.css.map"
-    },
-    {
-      "Identity": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/favicon.svg",
-      "SourceId": "Sirkelen.Web",
-      "SourceType": "Discovered",
-      "ContentRoot": "/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/wwwroot/",
-      "BasePath": "_content/Sirkelen.Web",
-      "RelativePath": "favicon.svg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/favicon.svg"
     }
   ]
 }

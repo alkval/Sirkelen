@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Sirkelen.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cdf1bdf52a3dedb1bb75ada063888201b23b6522")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+92ee75d625b67de3daa5bb6b47c5374f099700a2")]
 [assembly: System.Reflection.AssemblyProductAttribute("Sirkelen.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Sirkelen.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -3,6 +3,7 @@ using Sirkelen.Web.Components;
 using Microsoft.AspNetCore.SignalR;
 using Sirkelen.Shared.Hubs;
 using Sirkelen.Shared.Services;
+using Sirkelen.Shared.infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

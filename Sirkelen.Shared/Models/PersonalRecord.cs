@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson;
+using MongoDB.EntityFrameworkCore;
 
+namespace Sirkelen.Shared.Models;
 public class PersonalRecord
 {
     public Guid Id { get; set; } // Primary key

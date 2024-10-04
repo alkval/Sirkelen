@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SignalR;
 using Sirkelen.Shared.Components;
 using Android.App.Roles;
 using Sirkelen.Shared.Services;
+using Sirkelen.Shared.infrastructure.Data;
 
 namespace Sirkelen;
 

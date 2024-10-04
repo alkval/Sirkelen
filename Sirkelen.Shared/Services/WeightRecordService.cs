@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Sirkelen.Shared.Models;
+using System.Net.Http.Json;
+using Sirkelen.Shared.infrastructure.Data;
 namespace Sirkelen.Shared.Services
 {
     public class WeightRecordService : IWeightRecordService
