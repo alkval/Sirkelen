@@ -13,7 +13,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddDbContext<SirkelenContext>(options =>
 {
-    options.UseSqlite("Data Source=../Sirkelen.Shared/sirkelen.db");
+    var connectionString = builder.Configuration["ConnectionStrings:MongoDBConnection"];
+    options.UseMongoDB(connectionString, "Cluster0");
 });
 builder.Services.AddSignalR();
 

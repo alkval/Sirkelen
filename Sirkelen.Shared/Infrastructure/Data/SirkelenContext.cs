@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Sirkelen.Shared.Models;
+using MongoDB.Driver;
+using MongoDB.EntityFrameworkCore.Extensions;
+
 
 namespace Sirkelen.Shared.infrastructure.Data;
 public class SirkelenContext : DbContext
