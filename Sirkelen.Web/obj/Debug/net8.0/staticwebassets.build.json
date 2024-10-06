@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "WW4GwE+VNXB9l1xs8stLFBOt/qB/vjDgMOyydUrQx2Y=",
+  "Hash": "RQCT0Ad+1n2yqrci26VK2b5APxUf+YSHUagmg39yImY=",
   "Source": "Sirkelen.Web",
   "BasePath": "_content/Sirkelen.Web",
   "Mode": "Default",
@@ -11,10 +11,10 @@
       "Version": 2,
       "Source": "Sirkelen.Shared",
       "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
-      "AdditionalPublishProperties": "",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalPublishPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained",
       "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
-      "AdditionalBuildProperties": "",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
       "AdditionalBuildPropertiesToRemove": "WebPublishProfileFile;TargetFramework;RuntimeIdentifier;SelfContained"
     }
   ],

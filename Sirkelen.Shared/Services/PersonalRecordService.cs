@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Sirkelen.Shared.Models;
 using System.Net.Http.Json;
 using Sirkelen.Shared.infrastructure.Data;
+using MongoDB.Bson;
 
 namespace Sirkelen.Shared.Services
 {
@@ -19,7 +20,7 @@ namespace Sirkelen.Shared.Services
             _context = context;
         }
 
-        public async Task<List<PersonalRecord>> GetPersonalRecordsAsync(Guid userId)
+        public async Task<List<PersonalRecord>> GetPersonalRecordsAsync(ObjectId userId)
         {
             return await _context.PersonalRecords
                 .Where(pr => pr.UserId == userId)
@@ -27,7 +28,7 @@ namespace Sirkelen.Shared.Services
                 .ToListAsync();
         }
 
-        public async Task AddRecordAsync(Guid userId, PersonalRecord record)
+        public async Task AddRecordAsync(ObjectId userId, PersonalRecord record)
         {
             record.UserId = userId;
             _context.PersonalRecords.Add(record);
@@ -48,7 +49,7 @@ namespace Sirkelen.Shared.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PersonalRecord> GetRecordByIdAsync(Guid recordId)
+        public async Task<PersonalRecord> GetRecordByIdAsync(ObjectId recordId)
         {
             return await _context.PersonalRecords.FindAsync(recordId);
         }

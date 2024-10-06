@@ -1,6 +1,7 @@
 @page "/weight-tracker"
 @namespace Sirkelen.Shared.Components
 @using Sirkelen.Shared.Models
+@using MongoDB.Bson
 @using Sirkelen.Shared.Services
 @inject IWeightRecordService WeightRecordService
 
@@ -8,7 +9,7 @@
 
 @code {
     [Parameter]
-    public Guid UserId { get; set; }
+    public ObjectId UserId { get; set; }
 
     private List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
 

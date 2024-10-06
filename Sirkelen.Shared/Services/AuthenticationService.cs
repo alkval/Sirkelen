@@ -22,6 +22,10 @@ public class AuthenticationService : IAuthenticationService
             try
             {
                 var user = await response.Content.ReadFromJsonAsync<User>();
+                if (user == null)
+                {
+                    throw new Exception("User object is null.");
+                }
                 return user;
             }
             catch (Exception ex)

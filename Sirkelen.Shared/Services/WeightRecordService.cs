@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Sirkelen.Shared.Models;
 using System.Net.Http.Json;
 using Sirkelen.Shared.infrastructure.Data;
+using MongoDB.Bson;
 namespace Sirkelen.Shared.Services
 {
     public class WeightRecordService : IWeightRecordService
@@ -18,7 +19,7 @@ namespace Sirkelen.Shared.Services
             _context = context;
         }
 
-        public async Task<List<WeightRecord>> GetWeightRecordsAsync(Guid userId)
+        public async Task<List<WeightRecord>> GetWeightRecordsAsync(ObjectId userId)
         {
             return await _context.WeightRecords
                 .Where(wr => wr.UserId == userId)
@@ -40,7 +41,7 @@ namespace Sirkelen.Shared.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteWeightRecordAsync(Guid recordId)
+        public async Task DeleteWeightRecordAsync(ObjectId recordId)
         {
             var record = await _context.WeightRecords.FindAsync(recordId);
             if (record != null)

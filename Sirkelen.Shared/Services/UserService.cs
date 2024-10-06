@@ -4,11 +4,12 @@ namespace Sirkelen.Shared.Services;
 using Sirkelen.Shared.Models;
 using System.Net.Http.Json;
 using Sirkelen.Shared.infrastructure.Data;
+using MongoDB.Bson;
 
 
 public class UserService(SirkelenContext context) : IUserService
 {
-    public async Task<User> GetUserAsync(Guid id)
+    public async Task<User> GetUserAsync(ObjectId id)
     {
         return await context.Users.FindAsync(id);
     }
@@ -25,7 +26,7 @@ public class UserService(SirkelenContext context) : IUserService
         return user;
     }
 
-    public async Task<User> DeleteUserAsync(Guid id)
+    public async Task<User> DeleteUserAsync(ObjectId id)
     {
         var user = await context.Users.FindAsync(id);
         if (user != null)

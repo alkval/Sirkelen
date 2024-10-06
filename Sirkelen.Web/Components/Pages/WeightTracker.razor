@@ -2,13 +2,14 @@
 @namespace Sirkelen.Web.Components.Pages
 @using Sirkelen.Shared.Models
 @using Sirkelen.Shared.Services
+@using MongoDB.Bson
 @inject IWeightRecordService WeightRecordService
 
 <h3>Weight Tracker</h3>
 
 @code {
     [Parameter]
-    public Guid UserId { get; set; }
+    public ObjectId UserId { get; set; }
 
     private List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
 

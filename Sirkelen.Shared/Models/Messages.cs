@@ -2,34 +2,26 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.EntityFrameworkCore;
 
 namespace Sirkelen.Shared.Models;
 
-public class Messages
+[Collection("Messages")] // Use a collection for messages
+public class Message
 {
     [BsonId]
     [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; }
+    public ObjectId Id { get; set; } // Unique identifier for each message
 
-    [BsonElement("sender")]
+    [BsonElement("senderId")]
     [Required]
-    public User Sender { get; set; }
+    public ObjectId SenderId { get; set; } // Use UserId instead of the entire User object
 
     [BsonElement("message")]
     [Required]
-    public string Message { get; set; }
-
-    [BsonElement("name")]
-    [Required]
-    public string Name { get; set; }
-
-    [BsonElement("profilePicture")]
-    public string? ProfilePicture { get; set; }
-
-    [BsonElement("mediaUrl")]
-    public string? MediaUrl { get; set; }
+    public string? MessageContent { get; set; } // Rename to avoid confusion
 
     [BsonElement("time")]
     [Required]
-    public DateTime Time { get; set; }
+    public DateTime Time { get; set; } // Timestamp for the message
 }

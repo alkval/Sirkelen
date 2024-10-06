@@ -2,25 +2,19 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.EntityFrameworkCore;
 
-namespace Sirkelen.Shared.Models;
-
+[Collection("PersonalRecords")]
 public class PersonalRecord
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; } // Primary key
+    public ObjectId Id { get; set; } // Primary key
 
     [BsonElement("userId")]
-    [BsonRepresentation(BsonType.String)]
-    public Guid UserId { get; set; } // Foreign key
-
-    [BsonIgnore]
-    public User User { get; set; } // Navigation property
+    public ObjectId UserId { get; set; } // Foreign key
 
     [BsonElement("exerciseName")]
     [Required]
-    public string ExerciseName { get; set; }
+    public string? ExerciseName { get; set; }
 
     [BsonElement("weight")]
     [BsonRepresentation(BsonType.Decimal128)]

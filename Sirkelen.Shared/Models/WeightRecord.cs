@@ -2,28 +2,21 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.EntityFrameworkCore;
 
-namespace Sirkelen.Shared.Models;
-
+[Collection("WeightRecords")]
 public class WeightRecord
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public Guid Id { get; set; } // Primary key
-
-    [BsonIgnore]
-    public User User { get; set; } // Navigation property
+    public ObjectId Id { get; set; } // Primary key
 
     [BsonElement("userId")]
-    [BsonRepresentation(BsonType.String)]
-    public Guid UserId { get; set; } // Foreign key
+    public ObjectId UserId { get; set; } // Foreign key
 
-    [BsonElement("weight")]
-    [BsonRepresentation(BsonType.Decimal128)]
-    [Required]
-    public decimal Weight { get; set; }
+    [Required(ErrorMessage = "Weight is required")]
+    [Display(Name = "Weight")]
+    public decimal? Weight { get; set; }
 
-    [BsonElement("date")]
-    [Required]
-    public DateTime Date { get; set; }
+    [Required(ErrorMessage = "Date is required")]
+    [Display(Name = "Date")]
+    public DateTime? Date { get; set; }
 }

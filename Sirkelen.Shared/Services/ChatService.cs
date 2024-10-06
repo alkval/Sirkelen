@@ -6,7 +6,7 @@ using Sirkelen.Shared.infrastructure.Data;
 
 public class ChatService
 {
-    private HubConnection _hubConnection;
+    private HubConnection? _hubConnection;
 
     public async Task InitializeSignalR()
     {
@@ -19,14 +19,28 @@ public class ChatService
 
     public async Task SendMessage(string user, string message)
     {
-        await _hubConnection.InvokeAsync("SendMessage", user, message);
+        if (_hubConnection != null)
+        {
+            await _hubConnection.InvokeAsync("SendMessage", user, message);
+        }
+        else
+        {
+            throw new InvalidOperationException("SignalR connection is not initialized.");
+        }
     }
 
     public void ReceiveMessage(Action<string, string> handleReceivedMessage)
     {
-        _hubConnection.On<string, string>("ReceiveMessage", (user, message) => 
+        if (_hubConnection != null)
         {
-            handleReceivedMessage(user, message);
-        });
+            _hubConnection.On<string, string>("ReceiveMessage", (user, message) => 
+            {
+                handleReceivedMessage(user, message);
+            });
+        }
+        else
+        {
+            throw new InvalidOperationException("SignalR connection is not initialized.");
+        }
     }
 }

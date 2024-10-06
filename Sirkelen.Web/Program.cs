@@ -14,6 +14,10 @@ builder.Services.AddRazorComponents()
 builder.Services.AddDbContext<SirkelenContext>(options =>
 {
     var connectionString = builder.Configuration["ConnectionStrings:MongoDBConnection"];
+    if (string.IsNullOrEmpty(connectionString))
+    {
+        throw new InvalidOperationException("Connection string for MongoDB is not configured.");
+    }
     options.UseMongoDB(connectionString, "Cluster0");
 });
 builder.Services.AddSignalR();
