@@ -11,7 +11,12 @@ public class UserService(SirkelenContext context) : IUserService
 {
     public async Task<User> GetUserAsync(ObjectId id)
     {
-        return await context.Users.FindAsync(id);
+        var user = await context.Users.FindAsync(id);
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+        return user;
     }
 
     public async Task<List<User>> GetAllUsersAsync()

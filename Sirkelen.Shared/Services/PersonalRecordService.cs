@@ -51,7 +51,12 @@ namespace Sirkelen.Shared.Services
 
         public async Task<PersonalRecord> GetRecordByIdAsync(ObjectId recordId)
         {
-            return await _context.PersonalRecords.FindAsync(recordId);
+            var record = await _context.PersonalRecords.FindAsync(recordId);
+            if (record == null)
+            {
+                throw new KeyNotFoundException($"Record with ID {recordId} not found.");
+            }
+            return record;
         }
     }
 }
