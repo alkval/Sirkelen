@@ -12,11 +12,8 @@ public class SirkelenContext : DbContext
     public DbSet<WeightRecord> WeightRecords { get; set; }
     public DbSet<Message> Messages { get; set; }
 
-    public SirkelenContext(DbContextOptions<SirkelenContext> options) : base(options) 
+    public SirkelenContext(DbContextOptions options) : base(options) 
     { 
-    }
-    public SirkelenContext()
-    {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

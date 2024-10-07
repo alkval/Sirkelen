@@ -24,11 +24,17 @@ public class UserService(SirkelenContext context) : IUserService
         return await context.Users.ToListAsync();
     }
 
+
     public async Task<User> UpdateUserAsync(User user)
     {
-        context.Users.Update(user);
-        await context.SaveChangesAsync();
-        return user;
+        var userToUpdate = await context.Users.FindAsync(user.Id);
+        if (userToUpdate != null)
+        {
+            context.Users.Update(user);
+            await context.SaveChangesAsync();
+            return user;
+        }
+        throw new Exception("User not found");
     }
 
     public async Task<User> DeleteUserAsync(ObjectId id)
