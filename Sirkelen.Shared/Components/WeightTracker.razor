@@ -6,21 +6,3 @@
 @inject IWeightRecordService WeightRecordService
 
 <h3>Weight Tracker</h3>
-
-@code {
-    [Parameter]
-    public ObjectId UserId { get; set; }
-
-    private List<WeightRecord> WeightRecords { get; set; } = new List<WeightRecord>();
-
-    protected override async Task OnInitializedAsync()
-    {
-        WeightRecords = await WeightRecordService.GetWeightRecordsAsync(UserId);
-
-    }
-
-    private async Task AddWeightRecord()
-    {
-        // Add weight record
-    }
-}

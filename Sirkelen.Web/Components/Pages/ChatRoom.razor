@@ -1,48 +1,67 @@
-@namespace Sirkelen.Web.Components.Pages
 @page "/"
-<h1>Hi</h1>
-@* @inject NavigationManager NavigationManager
-@inject IMessageService MessageService
-@implements IAsyncDisposable
+@using Sirkelen.Shared.Services
+@using Sirkelen.Shared.Models
+@namespace Sirkelen.Web.Components.Pages
+@inject FirebaseService FirebaseService
 
 <h3>Chat Room</h3>
-<!-- Add chat UI here -->
+
+<div>
+    <ul>
+        @if (messages == null)
+        {
+            <li>Loading messages...</li>
+        }
+        else if (messages.Count == 0)
+        {
+            <li>No messages yet. Start the conversation!</li>
+        }
+        else
+        {
+            @foreach (var message in messages)
+            {
+                <li><strong>@message.UserId</strong>: @message.MessageContent <em>(@message.Time.ToString("g"))</em></li>
+            }
+        }
+    </ul>
+</div>
+
+<div>
+    <input type="text" @bind="newMessageContent" placeholder="Enter your message..." />
+    <button @onclick="SendMessage">Send</button>
+</div>
 
 @code {
-    private HubConnection hubConnection;
-    private List<Messages> messages = new List<Messages>();
-    private string userInput;
+    private List<Message>? messages;
+    private string newMessageContent = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        hubConnection = new HubConnectionBuilder()
-            .WithUrl(NavigationManager.ToAbsoluteUri("/chathub"))
-            .Build();
-
-        hubConnection.On<string, string>("ReceiveMessage", (user, message) =>
-        {
-            var encodedMsg = $"{user}: {message}";
-            messages.Add(new Messages { /* populate properties */ });
-            InvokeAsync(StateHasChanged);
-        });
-
-        await hubConnection.StartAsync();
+        await LoadMessages();
     }
 
-    private async Task Send()
+    private async Task LoadMessages()
     {
-        if (hubConnection is not null)
+        messages = await FirebaseService.GetChatMessages();
+        // Sort messages by time if needed
+        messages = messages.OrderBy(m => m.Time).ToList();
+    }
+
+    private async Task SendMessage()
+    {
+        if (!string.IsNullOrWhiteSpace(newMessageContent))
         {
-            await hubConnection.SendAsync("SendMessage", "User", userInput);
-            userInput = string.Empty;
+            var message = new Message
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserId = "1", // Replace this with the actual user ID or username
+                MessageContent = newMessageContent,
+                Time = DateTime.UtcNow
+            };
+
+            await FirebaseService.AddChatMessage(message);
+            newMessageContent = string.Empty;
+            await LoadMessages(); // Reload the messages to include the new one
         }
     }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (hubConnection is not null)
-        {
-            await hubConnection.DisposeAsync();
-        }
-    }
-} *@
+}

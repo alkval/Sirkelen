@@ -1,22 +1,19 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.EntityFrameworkCore;
+using Google.Cloud.Firestore;
+namespace Sirkelen.Shared.Models;
 
-[Collection("WeightRecords")]
+[FirestoreData]
 public class WeightRecord
 {
-    public ObjectId Id { get; set; } // Primary key
+    [FirestoreDocumentId]
+    public string? Id { get; set; } // Primary key
 
-    [BsonElement("userId")]
-    public ObjectId UserId { get; set; } // Foreign key
-
-    [Required(ErrorMessage = "Weight is required")]
-    [Display(Name = "Weight")]
+    [FirestoreProperty]
+    public string? UserId { get; set; } // Foreign key
+    [FirestoreProperty]
     public decimal? Weight { get; set; }
 
-    [Required(ErrorMessage = "Date is required")]
-    [Display(Name = "Date")]
+    [FirestoreProperty]
     public DateTime? Date { get; set; }
 }

@@ -1,48 +1,35 @@
 @page "/members"
 @using Sirkelen.Shared.Models
 @using Sirkelen.Shared.Services
-@inject IUserService UserService
+@inject FirebaseService FirebaseService
 
 <h3>Members</h3>
 
-@if (members == null)
+@if (users == null)
 {
-    <p><em>Loading members...</em></p>
+    <p>Loading...</p>
 }
-else if (members.Count == 0)
+else if (users.Count == 0)
 {
     <p>No members found.</p>
 }
 else
 {
-    <ul class="member-list">
-        @foreach (var member in members)
+    <ul>
+        @foreach (var user in users)
         {
-            <li class="member-item">
-                <img src="@member.ProfilePictureUrl" alt="@member.Name's profile picture" class="profile-picture" />
-                <div>
-                    <h4>@member.Name (@member.Username)</h4>
-                    <p>Height: @member.Height m</p>
-                    <p>Weight: @member.Weight kg</p>
-                </div>
+            <li>
+                <strong>@user.Name</strong> (@user.Username) - Height: @user.Height cm, Weight: @user.Weight kg
             </li>
         }
     </ul>
 }
 
 @code {
-    private List<User> members;
+    private List<User>? users;
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            members = await UserService.GetAllUsersAsync();
-        }
-        catch (Exception ex)
-        {
-            // Handle any exceptions
-            Console.WriteLine($"Error fetching members: {ex.Message}");
-        }
+        users = await FirebaseService.GetUsers();
     }
 }

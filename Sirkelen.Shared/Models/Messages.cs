@@ -1,27 +1,30 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.EntityFrameworkCore;
+using Google.Cloud.Firestore;
 
-namespace Sirkelen.Shared.Models;
-
-[Collection("Messages")] // Use a collection for messages
-public class Message
+namespace Sirkelen.Shared.Models
 {
-    [BsonId]
-    [BsonRepresentation(BsonType.String)]
-    public ObjectId Id { get; set; } // Unique identifier for each message
+    [FirestoreData]
+    public class Message
+    {
+        [FirestoreDocumentId]
+        public string Id { get; set; } // Unique identifier for each message
 
-    [BsonElement("senderId")]
-    [Required]
-    public ObjectId SenderId { get; set; } // Use UserId instead of the entire User object
+        [Required]
+        [FirestoreProperty]
+        public string UserId { get; set; } // The user who sent the message
 
-    [BsonElement("message")]
-    [Required]
-    public string? MessageContent { get; set; } // Rename to avoid confusion
+        [Required]
+        [FirestoreProperty]
+        public string MessageContent { get; set; } // Content of the message
 
-    [BsonElement("time")]
-    [Required]
-    public DateTime Time { get; set; } // Timestamp for the message
+        [Required]
+        [FirestoreProperty]
+        public DateTime Time { get; set; } // Timestamp for when the message was sent
+        public Message()
+        {
+            Time = DateTime.UtcNow;
+        }
+    }
+    
 }

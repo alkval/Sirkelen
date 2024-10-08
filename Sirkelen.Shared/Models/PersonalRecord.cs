@@ -1,35 +1,37 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.EntityFrameworkCore;
+using Google.Cloud.Firestore;
 
-[Collection("PersonalRecords")]
-public class PersonalRecord
+namespace Sirkelen.Shared.Models
 {
-    public ObjectId Id { get; set; } // Primary key
+    [FirestoreData]
+    public class PersonalRecord
+    {
+        [FirestoreDocumentId]
+        public string Id { get; set; } // Primary key
 
-    [BsonElement("userId")]
-    public ObjectId UserId { get; set; } // Foreign key
+        [Required]
+        [FirestoreProperty]
+        public string UserId { get; set; } // Foreign key
 
-    [BsonElement("exerciseName")]
-    [Required]
-    public string? ExerciseName { get; set; }
+        [Required]
+        [FirestoreProperty]
+        public string ExerciseName { get; set; }
 
-    [BsonElement("weight")]
-    [BsonRepresentation(BsonType.Decimal128)]
-    [Required]
-    public decimal Weight { get; set; }
+        [Required]
+        [FirestoreProperty]
+        public decimal Weight { get; set; }
 
-    [BsonElement("reps")]
-    [Required]
-    public int Reps { get; set; }
+        [Required]
+        [FirestoreProperty]
+        public int Reps { get; set; }
 
-    [BsonElement("sets")]
-    [Required]
-    public int Sets { get; set; }
+        [Required]
+        [FirestoreProperty]
+        public int Sets { get; set; }
 
-    [BsonElement("date")]
-    [Required]
-    public DateTime Date { get; set; }
+        [Required]
+        [FirestoreProperty]
+        public DateTime Date { get; set; }
+    }
 }
