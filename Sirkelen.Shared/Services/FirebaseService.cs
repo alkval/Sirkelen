@@ -17,10 +17,11 @@ namespace Sirkelen.Shared.Services
 
         public FirebaseService(string v)
         {
-            InitializeFirestore();
+            // Await the initialization properly
+            InitializeFirestore().GetAwaiter().GetResult();
         }
 
-        private async void InitializeFirestore()
+        private async Task InitializeFirestore()
         {
             try
             {
@@ -47,15 +48,7 @@ namespace Sirkelen.Shared.Services
 
         public async Task AddUser(User user)
         {
-            if (!_isInitialized)
-            {
-                Debug.WriteLine("Firestore is not initialized. Waiting...");
-                await Task.Delay(5000); // Wait for 5 seconds
-                if (!_isInitialized)
-                {
-                    throw new InvalidOperationException("Firestore is not initialized.");
-                }
-            }
+            await EnsureInitialized();
 
             try
             {
@@ -65,9 +58,7 @@ namespace Sirkelen.Shared.Services
                 Debug.WriteLine($"User {user.Name} added successfully.");
             }
             catch (Exception ex)
-    
-
-        {
+            {
                 Debug.WriteLine($"Error adding user {user.Name}: {ex.Message}");
                 Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 throw;
@@ -76,6 +67,8 @@ namespace Sirkelen.Shared.Services
 
         public async Task<List<User>> GetUsers()
         {
+            await EnsureInitialized();
+
             var users = new List<User>();
             var snapshot = await _firestoreDb.Collection("Users").GetSnapshotAsync();
             foreach (var document in snapshot.Documents)
@@ -84,19 +77,75 @@ namespace Sirkelen.Shared.Services
             }
             return users;
         }
+                public async Task AddPersonalRecord(PersonalRecord record)
+        {
+            await EnsureInitialized();
+            var recordRef = _firestoreDb.Collection("PersonalRecords").Document();
+            await recordRef.SetAsync(record);
+
+            // Update user's PersonalRecordIds
+            var userRef = _firestoreDb.Collection("Users").Document(record.UserId);
+            await userRef.UpdateAsync("PersonalRecordIds", FieldValue.ArrayUnion(recordRef.Id));
+        }
+
+        public async Task<List<PersonalRecord>> GetPersonalRecords(string userId)
+        {
+            await EnsureInitialized();
+            var snapshot = await _firestoreDb.Collection("PersonalRecords")
+                .WhereEqualTo("UserId", userId)
+                .GetSnapshotAsync();
+
+            return snapshot.Documents.Select(d => d.ConvertTo<PersonalRecord>()).ToList();
+        }
+
+        public async Task AddWeightRecord(WeightRecord record)
+        {
+            await EnsureInitialized();
+            var recordRef = _firestoreDb.Collection("WeightRecords").Document();
+            await recordRef.SetAsync(record);
+
+            // Update user's WeightRecordIds and current Weight
+            var userRef = _firestoreDb.Collection("Users").Document(record.UserId);
+            await userRef.UpdateAsync(new Dictionary<string, object>
+            {
+                { "WeightRecordIds", FieldValue.ArrayUnion(recordRef.Id) },
+                { "Weight", record.Weight }
+            });
+        }
+
+        public async Task<List<WeightRecord>> GetWeightRecords(string userId)
+        {
+            await EnsureInitialized();
+            var snapshot = await _firestoreDb.Collection("WeightRecords")
+                .WhereEqualTo("UserId", userId)
+                .OrderByDescending("Date")
+                .GetSnapshotAsync();
+
+            return snapshot.Documents.Select(d => d.ConvertTo<WeightRecord>()).ToList();
+        }
+
+        public async Task UpdateUserWeight(string userId)
+        {
+            await EnsureInitialized();
+            var latestWeightRecord = await GetWeightRecords(userId);
+            if (latestWeightRecord.Any())
+            {
+                var userRef = _firestoreDb.Collection("Users").Document(userId);
+                await userRef.UpdateAsync("Weight", latestWeightRecord.First().Weight);
+            }
+        }
 
         public async Task AddChatMessage(Message message)
         {
+            await EnsureInitialized();
+
             var chatRef = _firestoreDb.Collection("ChatMessages");
             await chatRef.AddAsync(message);
         }
 
         public async Task<List<Message>> GetChatMessages()
         {
-            if (_firestoreDb == null)
-            {
-                throw new InvalidOperationException("FirestoreDb has not been initialized.");
-            }
+            await EnsureInitialized();
 
             var snapshot = await _firestoreDb.Collection("ChatMessages").GetSnapshotAsync();
             
@@ -113,6 +162,19 @@ namespace Sirkelen.Shared.Services
             }
 
             return messages;
+        }
+
+        private async Task EnsureInitialized()
+        {
+            if (!_isInitialized)
+            {
+                Debug.WriteLine("Firestore is not initialized. Waiting...");
+                await Task.Delay(5000); // Wait for 5 seconds
+                if (!_isInitialized)
+                {
+                    throw new InvalidOperationException("Firestore is not initialized.");
+                }
+            }
         }
     }
 }

@@ -1,42 +1,42 @@
-namespace Sirkelen.Shared.Services;
 using Sirkelen.Shared.Models;
-using System.Net.Http.Json;
+using System;
 
-
-public class AuthenticationService : IAuthenticationService
+namespace Sirkelen.Shared.Services
 {
-    private readonly HttpClient _httpClient;
-
-    public AuthenticationService(HttpClient httpClient)
+    public class AuthenticationService
     {
-        _httpClient = httpClient;
-    }
+        private User _currentUser;
+        private readonly SessionService _sessionService;
 
-    public async Task<User> LoginAsync(string username, string password)
-    {
-        var response = await _httpClient.PostAsJsonAsync("api/auth/login", new { username, password });
-
-        if (response.IsSuccessStatusCode)
+        public AuthenticationService(SessionService sessionService)
         {
-            try
-            {
-                var user = await response.Content.ReadFromJsonAsync<User>();
-                if (user == null)
-                {
-                    throw new Exception("User object is null.");
-                }
-                return user;
-            }
-            catch (Exception ex)
-            {
-                // Handle deserialization error or other issues
-                throw new Exception("Failed to parse the user object from the server.", ex);
-            }
+            _sessionService = sessionService;
         }
-        else
+
+        public User CurrentUser => _currentUser;
+
+        public bool IsAuthenticated => _currentUser != null;
+
+        public event Action AuthenticationStateChanged;
+
+        public async Task InitializeAsync()
         {
-            // Log the error or handle the failure case
-            throw new Exception($"Login failed with status code: {response.StatusCode}");
+            _currentUser = await _sessionService.GetUserSessionAsync();
+            AuthenticationStateChanged?.Invoke();
+        }
+
+        public async Task LoginAsync(User user)
+        {
+            _currentUser = user;
+            await _sessionService.SaveUserSessionAsync(user);
+            AuthenticationStateChanged?.Invoke();
+        }
+
+        public async Task LogoutAsync()
+        {
+            _currentUser = null;
+            await _sessionService.ClearUserSessionAsync();
+            AuthenticationStateChanged?.Invoke();
         }
     }
 }

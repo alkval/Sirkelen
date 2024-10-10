@@ -12,7 +12,7 @@ public class WeightRecord
     [FirestoreProperty]
     public string? UserId { get; set; } // Foreign key
     [FirestoreProperty]
-    public decimal? Weight { get; set; }
+    public double Weight { get; set; }
 
     [FirestoreProperty]
     public DateTime? Date { get; set; }

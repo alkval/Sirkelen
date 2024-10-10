@@ -36,14 +36,7 @@
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Components.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Components.Forms.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Components.Web.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Connections.Abstractions.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Http.Connections.Client.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Http.Connections.Common.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.Metadata.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.SignalR.Client.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.SignalR.Client.Core.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.SignalR.Common.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.AspNetCore.SignalR.Protocols.Json.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Bcl.AsyncInterfaces.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.CodeAnalysis.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.CodeAnalysis.CSharp.dll
@@ -57,7 +50,6 @@
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.EntityFrameworkCore.Sqlite.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Extensions.DependencyModel.dll
-/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Extensions.Features.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.Extensions.Options.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Microsoft.JSInterop.dll

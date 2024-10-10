@@ -1,8 +1,85 @@
 @page "/weight-tracker"
 @namespace Sirkelen.Shared.Components
 @using Sirkelen.Shared.Models
-@using MongoDB.Bson
 @using Sirkelen.Shared.Services
-@inject IWeightRecordService WeightRecordService
+@inject FirebaseService FirebaseService
+@inject AuthenticationService AuthService
 
 <h3>Weight Tracker</h3>
+
+@if (!AuthService.IsAuthenticated)
+{
+    <p>You need to log in to view your weight records.</p>
+}
+else
+{
+    <div>
+        @if (WeightRecords == null)
+        {
+            <p>Loading...</p>
+        }
+        else if (WeightRecords.Count == 0)
+        {
+            <p>No weight records found.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var record in WeightRecords)
+                {
+                    <li>@record.Date.Value.ToString("dd-MMMM-yyyy"): @record.Weight kg</li>
+                }
+            </ul>
+        }
+
+        <h4>Add New Weight Record</h4>
+        <input @bind="NewWeight" type="number" step="0.1" min="0" placeholder="Enter your weight" />
+        <button @onclick="AddWeightRecord">Add</button>
+    </div>
+}
+
+@code {
+    private List<WeightRecord> WeightRecords;
+    private double NewWeight;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthService.IsAuthenticated)
+        {
+            // Get the weight records for the logged-in user
+            var userId = AuthService.CurrentUser.Id;
+            WeightRecords = await FirebaseService.GetWeightRecords(userId);
+
+            // Sort records from oldest to newest
+            WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
+        }
+    }
+
+    private async Task AddWeightRecord()
+    {
+        if (AuthService.IsAuthenticated && NewWeight > 0)
+        {
+            var userId = AuthService.CurrentUser.Id;
+
+            // Create a new weight record
+            var newRecord = new WeightRecord
+            {
+                UserId = userId,
+                Weight = NewWeight,
+                Date = DateTime.UtcNow
+            };
+
+            // Add the record to Firestore
+            await FirebaseService.AddWeightRecord(newRecord);
+
+            // Update the weight records list
+            WeightRecords.Add(newRecord);
+
+            // Sort records again to keep them in order
+            WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
+
+            // Clear the input field
+            NewWeight = 0;
+        }
+    }
+}

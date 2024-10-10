@@ -20,7 +20,7 @@ namespace Sirkelen.Shared.Models
 
         [Required]
         [FirestoreProperty]
-        public decimal Weight { get; set; }
+        public double Weight { get; set; }
 
         [Required]
         [FirestoreProperty]

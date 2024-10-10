@@ -3,47 +3,113 @@
 @using Sirkelen.Shared.Models
 @namespace Sirkelen.Shared.Components
 @inject FirebaseService FirebaseService
+@inject AuthenticationService AuthService
+@inject NavigationManager NavigationManager
 
-<h3>Chat Room</h3>
+<div class="chatroom-container">
+    <h3>Chat Room</h3>
 
-<div>
-    <ul>
-        @if (messages == null)
-        {
-            <li>Loading messages...</li>
-        }
-        else if (messages.Count == 0)
-        {
-            <li>No messages yet. Start the conversation!</li>
-        }
-        else
-        {
-            @foreach (var message in messages)
-            {
-                <li><strong>@message.UserId</strong>: @message.MessageContent <em>(@message.Time.ToString("g"))</em></li>
-            }
-        }
-    </ul>
-</div>
+    @if (!AuthService.IsAuthenticated)
+    {
+        <p>Please <a href="/login">login</a> to access the chat room.</p>
+    }
+    else
+    {
+        <div>
+            <p>Welcome, @AuthService.CurrentUser.Name! <button @onclick="Logout" class="btn btn-sm btn-secondary">Logout</button></p>
+        </div>
 
-<div>
-    <input type="text" @bind="newMessageContent" placeholder="Enter your message..." />
-    <button @onclick="SendMessage">Send</button>
+        <div class="chat-messages">
+            <ul>
+                @if (messages == null)
+                {
+                    <li>Loading messages...</li>
+                }
+                else if (messages.Count == 0)
+                {
+                    <li>No messages yet. Start the conversation!</li>
+                }
+                else
+                {
+                    @foreach (var message in messages)
+                    {
+                        <li class="chat-message">
+                            <strong>@GetUserName(message.UserId)</strong>: @message.MessageContent 
+                            <em>(@FormatMessageTime(message.Time))</em>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+
+        <div class="chat-input-container">
+            <input type="text" @bind="newMessageContent" class="chat-input" placeholder="Enter your message..." />
+            <button @onclick="SendMessage" class="send-button">➤</button>
+        </div>
+    }
 </div>
 
 @code {
     private List<Message>? messages;
+    private Dictionary<string, string> userNames = new Dictionary<string, string>();
     private string newMessageContent = string.Empty;
+
+    private DateTime ConvertToOsloTime(DateTime utcTime)
+    {
+        // Define the Oslo timezone
+        TimeZoneInfo osloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        
+        // Convert UTC time to Oslo time
+        DateTime osloTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
+        return osloTime;
+    }
+
+    private string FormatMessageTime(DateTime messageTime)
+    {
+        // Convert message time to Oslo time
+        DateTime osloMessageTime = ConvertToOsloTime(messageTime);
+        DateTime now = ConvertToOsloTime(DateTime.UtcNow); // Get current time in Oslo
+
+        // If the message is from yesterday
+        if (osloMessageTime.Date == DateTime.Today.AddDays(-1))
+        {
+            return $"yesterday {osloMessageTime.ToString("HH:mm")}";
+        }
+        // If the message is older than 48 hours
+        else if (osloMessageTime.Date <= DateTime.Today.AddDays(-2))
+        {
+            return $"{osloMessageTime.ToString("dd-MMMM-yyyy")} {osloMessageTime.ToString("HH:mm")}";
+        }
+        // Otherwise, show the time
+        return osloMessageTime.ToString("HH:mm");
+    }
 
     protected override async Task OnInitializedAsync()
     {
+        await AuthService.InitializeAsync();
+
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+            return;
+        }
+
         await LoadMessages();
     }
 
     private async Task LoadMessages()
     {
+        // Load all users
+        var users = await FirebaseService.GetUsers();
+
+        // Ensure that there are no duplicate user IDs
+        var distinctUsers = users.GroupBy(u => u.Id).Select(g => g.First()).ToList();
+
+        // Create a lookup dictionary for user IDs to names
+        userNames = distinctUsers.ToDictionary(u => u.Id, u => u.Name);
+
+        // Load messages
         messages = await FirebaseService.GetChatMessages();
-        // Sort messages by time if needed
         messages = messages.OrderBy(m => m.Time).ToList();
     }
 
@@ -54,7 +120,7 @@
             var message = new Message
             {
                 Id = Guid.NewGuid().ToString(),
-                UserId = "1", // Replace this with the actual user ID or username
+                UserId = AuthService.CurrentUser.Id,
                 MessageContent = newMessageContent,
                 Time = DateTime.UtcNow
             };
@@ -63,5 +129,17 @@
             newMessageContent = string.Empty;
             await LoadMessages(); // Reload the messages to include the new one
         }
+    }
+
+    private string GetUserName(string userId)
+    {
+        // Return the user's name if it exists in the dictionary, otherwise show the ID
+        return userNames.TryGetValue(userId, out var name) ? name : userId;
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        NavigationManager.NavigateTo("/login");
     }
 }

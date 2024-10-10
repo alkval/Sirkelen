@@ -6,8 +6,8 @@
 
 <h3>Chat Room</h3>
 
-<div>
-    <ul>
+<div class="chatroom-container">
+    <ul class="chat-messages">
         @if (messages == null)
         {
             <li>Loading messages...</li>
@@ -20,15 +20,18 @@
         {
             @foreach (var message in messages)
             {
-                <li><strong>@message.UserId</strong>: @message.MessageContent <em>(@message.Time.ToString("g"))</em></li>
+                <li class="chat-message">
+                    <strong>@message.UserId</strong>: @message.MessageContent 
+                    <em>(@message.Time.ToString("g"))</em>
+                </li>
             }
         }
     </ul>
 </div>
 
-<div>
-    <input type="text" @bind="newMessageContent" placeholder="Enter your message..." />
-    <button @onclick="SendMessage">Send</button>
+<div class="chat-input-container">
+    <input type="text" @bind="newMessageContent" class="chat-input" placeholder="Enter your message..." />
+    <button @onclick="SendMessage" class="send-button">Send</button>
 </div>
 
 @code {

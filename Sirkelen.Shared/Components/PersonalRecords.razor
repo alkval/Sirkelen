@@ -1,0 +1,104 @@
+@page "/personal-records"
+@namespace Sirkelen.Shared.Components
+@using Sirkelen.Shared.Models
+@using Sirkelen.Shared.Services
+@inject FirebaseService FirebaseService
+@inject AuthenticationService AuthService
+
+<h3>Your Personal Records</h3>
+
+@if (!AuthService.IsAuthenticated)
+{
+    <p>You need to log in to view your personal records.</p>
+}
+else
+{
+    <div>
+        @if (UserPersonalRecords == null)
+        {
+            <p>Loading...</p>
+        }
+        else if (UserPersonalRecords.Count == 0)
+        {
+            <p>No personal records found.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var record in UserPersonalRecords)
+                {
+                    <li>
+                        @record.ExerciseName: @record.Weight kg, @record.Reps reps, @record.Sets sets, 
+                        <em>(@ConvertToOsloTime(record.Date).ToString("dd-MMMM-yyyy"))</em>
+                    </li>
+                }
+            </ul>
+        }
+
+        <h4>Add New Personal Record</h4>
+        <input @bind="NewExerciseName" placeholder="Exercise Name" />
+        <input @bind="NewWeight" type="number" step="0.1" min="0" placeholder="Weight (kg)" />
+        <input @bind="NewReps" type="number" min="1" placeholder="Reps" />
+        <input @bind="NewSets" type="number" min="1" placeholder="Sets" />
+        <button @onclick="AddPersonalRecord">Add</button>
+    </div>
+}
+
+@code {
+    private List<PersonalRecord> UserPersonalRecords; // Renamed from PersonalRecords
+    private string NewExerciseName;
+    private double NewWeight;
+    private int NewReps;
+    private int NewSets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthService.IsAuthenticated)
+        {
+            // Get the personal records for the logged-in user
+            var userId = AuthService.CurrentUser.Id;
+            UserPersonalRecords = await FirebaseService.GetPersonalRecords(userId);
+        }
+    }
+
+    private async Task AddPersonalRecord()
+    {
+        if (AuthService.IsAuthenticated && !string.IsNullOrEmpty(NewExerciseName) && NewWeight > 0 && NewReps > 0 && NewSets > 0)
+        {
+            var userId = AuthService.CurrentUser.Id;
+
+            // Create a new personal record
+            var newRecord = new PersonalRecord
+            {
+                UserId = userId,
+                ExerciseName = NewExerciseName,
+                Weight = NewWeight,
+                Reps = NewReps,
+                Sets = NewSets,
+                Date = DateTime.UtcNow
+            };
+
+            // Add the record to Firestore
+            await FirebaseService.AddPersonalRecord(newRecord);
+
+            // Update the personal records list
+            UserPersonalRecords.Add(newRecord);
+
+            // Clear the input fields
+            NewExerciseName = string.Empty;
+            NewWeight = 0;
+            NewReps = 0;
+            NewSets = 0;
+        }
+    }
+
+    private DateTime ConvertToOsloTime(DateTime utcTime)
+    {
+        // Define the Oslo timezone
+        TimeZoneInfo osloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        
+        // Convert UTC time to Oslo time
+        DateTime osloTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
+        return osloTime;
+    }
+}

@@ -1,2 +1,58 @@
 @page "/login"
-@namespace Sirkelen.Shared.Components
+@using Sirkelen.Shared.Services
+@inject FirebaseService FirebaseService
+@inject AuthenticationService AuthService
+@inject NavigationManager NavigationManager
+
+<h3>Login</h3>
+
+<EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <InputText id="username" @bind-Value="loginModel.Username" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <InputText id="password" @bind-Value="loginModel.Password" class="form-control" type="password" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">
+        @errorMessage
+    </div>
+}
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string errorMessage = string.Empty;
+
+    private async Task HandleLogin()
+    {
+        var users = await FirebaseService.GetUsers();
+        var user = users.FirstOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+
+        if (user != null)
+        {
+            await AuthService.LoginAsync(user);
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Invalid username or password";
+        }
+    }
+
+    private class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
+}

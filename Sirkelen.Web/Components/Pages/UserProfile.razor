@@ -3,20 +3,6 @@
 @using Sirkelen.Shared.Components
 @using Sirkelen.Shared.Services
 @using Sirkelen.Shared.Models
-@using MongoDB.Bson
-@inject IUserService UserService
 
-<h3>@User.Name's Profile</h3>
+<h3>User's Profile</h3>
 <!-- Add user profile details here -->
-
-@code {
-    [Parameter]
-    public string UserId { get; set; }
-
-    private User User { get; set; } = new User();
-
-    protected override async Task OnInitializedAsync()
-    {
-        User = await UserService.GetUserAsync(UserId);
-    }
-}

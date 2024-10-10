@@ -29,7 +29,7 @@ namespace Sirkelen.Shared.Models
         public double Height { get; set; }
 
         [FirestoreProperty]
-        public double Weight { get; set; }
+        public double Weight { get; set; } // Changed to double
 
         [FirestoreProperty]
         public DateTime JoinDate { get; set; }
