@@ -15,6 +15,7 @@
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/DnsClient.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Firebase.Auth.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Firebase.dll
+/Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Firebase.Storage.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Google.Api.CommonProtos.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Google.Api.Gax.dll
 /Users/alexanderkvalvaag/Documents/Sirkelen/Sirkelen.Web/bin/Debug/net8.0/Google.Api.Gax.Grpc.dll

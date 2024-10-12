@@ -5,84 +5,152 @@
 @inject FirebaseService FirebaseService
 @inject AuthenticationService AuthService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+
+<script src="_content/Sirkelen.Shared/js/chat.js"></script>
 
 <div class="chatroom-container">
-    <h3>Chat Room</h3>
-
-    @if (!AuthService.IsAuthenticated)
-    {
-        <p>Please <a href="/login">login</a> to access the chat room.</p>
-    }
-    else
-    {
-        <div>
-            <p>Welcome, @AuthService.CurrentUser.Name! <button @onclick="Logout" class="btn btn-sm btn-secondary">Logout</button></p>
-        </div>
-
-        <div class="chat-messages">
-            <ul>
-                @if (messages == null)
-                {
-                    <li>Loading messages...</li>
-                }
-                else if (messages.Count == 0)
-                {
-                    <li>No messages yet. Start the conversation!</li>
-                }
-                else
-                {
-                    @foreach (var message in messages)
+    <div class="chat-messages" @ref="chatMessagesRef">
+        @if (messages == null)
+        {
+            <div class="message">Loading messages...</div>
+        }
+        else if (messages.Count == 0)
+        {
+            <div class="message">No messages yet. Start the conversation!</div>
+        }
+        else
+        {
+            @foreach (var message in messages)
+            {
+                bool isSentMessage = message.UserId == AuthService.CurrentUser.Id;
+                <div class="message-container @(isSentMessage ? "sent" : "received")">
+                    @if (!isSentMessage)
                     {
-                        <li class="chat-message">
-                            <strong>@GetUserName(message.UserId)</strong>: @message.MessageContent 
-                            <em>(@FormatMessageTime(message.Time))</em>
-                        </li>
+                        <img src="@GetUserProfilePicture(message.UserId)" alt="Profile" class="profile-picture" />
                     }
-                }
-            </ul>
-        </div>
+                    <div class="message">
+                        <div class="message-info">
+                            <span class="user-name">@GetUserName(message.UserId)</span>
+                            <span class="message-time">@FormatMessageTime(message.Time)</span>
+                        </div>
+                        <div class="message-content">@message.MessageContent</div>
+                    </div>
+                    @if (isSentMessage)
+                    {
+                        <img src="@GetUserProfilePicture(message.UserId)" alt="Profile" class="profile-picture" />
+                    }
+                </div>
+            }
+        }
+    </div>
 
-        <div class="chat-input-container">
-            <input type="text" @bind="newMessageContent" class="chat-input" placeholder="Enter your message..." />
-            <button @onclick="SendMessage" class="send-button">➤</button>
-        </div>
-    }
+    <div class="chat-input-container">
+        <input type="text" @bind="newMessageContent" @bind:event="oninput" @onkeyup="HandleKeyPress" class="chat-input" placeholder="Enter your message..." />
+        <button @onclick="SendMessage" class="send-button">➤</button>
+    </div>
 </div>
+
+<style>
+    .chatroom-container {
+        display: flex;
+        flex-direction: column;
+        height: calc(100vh - 4.5rem);
+        margin: 0;
+    }
+
+    .chat-messages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-bottom: 70px;
+    }
+
+    .message-container {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        max-width: 80%;
+    }
+
+    .message {
+        word-wrap: break-word;
+        max-width: calc(100% - 50px);
+    }
+
+    .message-content {
+        padding: 10px;
+        border-radius: 20px;
+        word-break: break-word;
+    }
+
+    .sent {
+        flex-direction: row-reverse;
+        margin-left: auto;
+    }
+
+    .received {
+        margin-right: auto;
+        margin-left: 0px;
+        align-self: flex-start;
+    }
+
+    .sent .message-content {
+        background-color: #7fc0ff;
+    }
+
+    .received .message-content {
+        background-color: #E8E8E8;
+    }
+
+    .message-info {
+        font-size: 0.8em;
+        color: #888;
+        margin-bottom: 5px;
+    }
+
+    .profile-picture {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        margin: 0 3px;
+        flex-shrink: 0;
+    }
+
+    .chat-input-container {
+        display: flex;
+        padding: 10px;
+        background-color: white;
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+    }
+
+    .chat-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 20px;
+    }
+
+    .send-button {
+        background-color: #66aff8;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        margin-left: 10px;
+        cursor: pointer;
+        border-radius: 20px;
+    }
+</style>
 
 @code {
     private List<Message>? messages;
     private Dictionary<string, string> userNames = new Dictionary<string, string>();
+    private Dictionary<string, string> userProfilePictures = new Dictionary<string, string>();
     private string newMessageContent = string.Empty;
-
-    private DateTime ConvertToOsloTime(DateTime utcTime)
-    {
-        // Define the Oslo timezone
-        TimeZoneInfo osloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        
-        // Convert UTC time to Oslo time
-        DateTime osloTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
-        return osloTime;
-    }
-
-    private string FormatMessageTime(DateTime messageTime)
-    {
-        // Convert message time to Oslo time
-        DateTime osloMessageTime = ConvertToOsloTime(messageTime);
-        DateTime now = ConvertToOsloTime(DateTime.UtcNow); // Get current time in Oslo
-
-        // If the message is from yesterday
-        if (osloMessageTime.Date == DateTime.Today.AddDays(-1))
-        {
-            return $"yesterday {osloMessageTime.ToString("HH:mm")}";
-        }
-        // If the message is older than 48 hours
-        else if (osloMessageTime.Date <= DateTime.Today.AddDays(-2))
-        {
-            return $"{osloMessageTime.ToString("dd-MMMM-yyyy")} {osloMessageTime.ToString("HH:mm")}";
-        }
-        // Otherwise, show the time
-        return osloMessageTime.ToString("HH:mm");
-    }
+    private ElementReference chatMessagesRef;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,20 +165,38 @@
         await LoadMessages();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeChatRoom");
+        }
+        await ScrollToBottom();
+    }
+
+    private async Task ScrollToBottom()
+    {
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("scrollToBottom", chatMessagesRef);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error scrolling to bottom: {ex.Message}");
+        }
+    }
+
     private async Task LoadMessages()
     {
-        // Load all users
         var users = await FirebaseService.GetUsers();
-
-        // Ensure that there are no duplicate user IDs
         var distinctUsers = users.GroupBy(u => u.Id).Select(g => g.First()).ToList();
-
-        // Create a lookup dictionary for user IDs to names
         userNames = distinctUsers.ToDictionary(u => u.Id, u => u.Name);
+        userProfilePictures = distinctUsers.ToDictionary(u => u.Id, u => u.ProfilePictureUrl);
 
-        // Load messages
         messages = await FirebaseService.GetChatMessages();
         messages = messages.OrderBy(m => m.Time).ToList();
+        StateHasChanged();
+        await ScrollToBottom();
     }
 
     private async Task SendMessage()
@@ -127,19 +213,48 @@
 
             await FirebaseService.AddChatMessage(message);
             newMessageContent = string.Empty;
-            await LoadMessages(); // Reload the messages to include the new one
+            await LoadMessages();
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await SendMessage();
         }
     }
 
     private string GetUserName(string userId)
     {
-        // Return the user's name if it exists in the dictionary, otherwise show the ID
         return userNames.TryGetValue(userId, out var name) ? name : userId;
     }
-
-    private async Task Logout()
+    
+    private string GetUserProfilePicture(string userId)
     {
-        await AuthService.LogoutAsync();
-        NavigationManager.NavigateTo("/login");
+        return userProfilePictures.TryGetValue(userId, out var pictureUrl) ? pictureUrl : "/images/default-profile-picture.png";
+    }
+
+    private DateTime ConvertToOsloTime(DateTime utcTime)
+    {
+        TimeZoneInfo osloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        DateTime osloTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
+        return osloTime;
+    }
+
+    private string FormatMessageTime(DateTime messageTime)
+    {
+        DateTime osloMessageTime = ConvertToOsloTime(messageTime);
+        DateTime now = ConvertToOsloTime(DateTime.UtcNow);
+
+        if (osloMessageTime.Date == DateTime.Today.AddDays(-1))
+        {
+            return $"yesterday {osloMessageTime.ToString("HH:mm")}";
+        }
+        else if (osloMessageTime.Date <= DateTime.Today.AddDays(-2))
+        {
+            return $"{osloMessageTime.ToString("dd-MMMM-yyyy")} {osloMessageTime.ToString("HH:mm")}";
+        }
+        return osloMessageTime.ToString("HH:mm");
     }
 }

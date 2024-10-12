@@ -15,16 +15,26 @@ else if (users.Count == 0)
 }
 else
 {
-    <ul>
+    <div>
         @foreach (var user in users)
         {
-            <li>
-                <strong>@user.Name</strong>  Weight: @user.Weight kg
-            </li>
+            <div>
+                <img src="@user.ProfilePictureUrl" alt="Profile picture of @user.Name" 
+                style="width: 75px; height: 75px; border-radius: 50%; padding-right: 5px;"/>
+                <strong>@user.Name</strong> (@user.Height cm,  @user.Weight kg)
+            </div>
         }
-    </ul>
+    </div>
 }
-
+<style>
+    .profile-picture {
+        width: 75px;
+        height: 75px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+</style>
 @code {
     private List<User>? users;
 

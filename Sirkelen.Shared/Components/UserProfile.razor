@@ -1,8 +1,52 @@
-@page "/user-profile/{UserId}"
-@namespace Sirkelen.Shared.Components
-@using Sirkelen.Shared.Components
+@page "/user-profile"
 @using Sirkelen.Shared.Services
 @using Sirkelen.Shared.Models
+@inject AuthenticationService AuthService
+@inject FirebaseService FirebaseService
+@inject NavigationManager NavigationManager
 
-<h3>User's Profile</h3>
-<!-- Add user profile details here -->
+<h3>User Profile</h3>
+
+@if (AuthService.IsAuthenticated)
+{
+    <div class="user-profile">
+        <img src="@AuthService.CurrentUser.ProfilePictureUrl" alt="Profile" class="profile-picture-large" />
+        <h4>Welcome, @AuthService.CurrentUser.Name!</h4>
+        <p>Height: @AuthService.CurrentUser.Height cm</p>
+        <p>Weight: @AuthService.CurrentUser.Weight kg</p>
+        <button @onclick="Logout" class="btn btn-danger">Logout</button>
+    </div>
+}
+else
+{
+    <p>Please <a href="/login">login</a> to view your profile.</p>
+}
+
+<style>
+    .profile-picture-large {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 10px;
+        object-fit: cover;
+    }
+</style>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.InitializeAsync();
+        await AuthService.RefreshCurrentUserAsync(FirebaseService); // Ensure the latest user data is fetched
+
+        if (!AuthService.IsAuthenticated)
+        {
+            NavigationManager.NavigateTo("/login");
+        }
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.LogoutAsync();
+        NavigationManager.NavigateTo("/login");
+    }
+}

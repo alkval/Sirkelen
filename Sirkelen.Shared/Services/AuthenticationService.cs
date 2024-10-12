@@ -38,5 +38,21 @@ namespace Sirkelen.Shared.Services
             await _sessionService.ClearUserSessionAsync();
             AuthenticationStateChanged?.Invoke();
         }
+
+        public async Task RefreshCurrentUserAsync(FirebaseService firebaseService)
+        {
+            if (_currentUser != null)
+            {
+                // Fetch the latest user data from Firestore
+                var userFromDb = await firebaseService.GetUsers().ContinueWith(t => t.Result.FirstOrDefault(u => u.Id == _currentUser.Id));
+                
+                if (userFromDb != null)
+                {
+                    _currentUser = userFromDb;
+                    await _sessionService.SaveUserSessionAsync(_currentUser); // Save the updated user session
+                    AuthenticationStateChanged?.Invoke(); // Notify about the authentication state change
+                }
+            }
+        }
     }
 }

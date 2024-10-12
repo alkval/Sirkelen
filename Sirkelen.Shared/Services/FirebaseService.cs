@@ -46,6 +46,7 @@ namespace Sirkelen.Shared.Services
             }
         }
 
+
         public async Task AddUser(User user)
         {
             await EnsureInitialized();
@@ -77,7 +78,7 @@ namespace Sirkelen.Shared.Services
             }
             return users;
         }
-                public async Task AddPersonalRecord(PersonalRecord record)
+        public async Task AddPersonalRecord(PersonalRecord record)
         {
             await EnsureInitialized();
             var recordRef = _firestoreDb.Collection("PersonalRecords").Document();
