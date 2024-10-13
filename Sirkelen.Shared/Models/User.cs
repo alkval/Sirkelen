@@ -35,6 +35,9 @@ namespace Sirkelen.Shared.Models
         public DateTime JoinDate { get; set; }
 
         [FirestoreProperty]
+        public double BMI { get; set; }
+
+        [FirestoreProperty]
         public DateTime? LastLogin { get; set; }
 
         [FirestoreProperty]

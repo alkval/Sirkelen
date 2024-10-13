@@ -14,6 +14,7 @@
         <h4>Welcome, @AuthService.CurrentUser.Name!</h4>
         <p>Height: @AuthService.CurrentUser.Height cm</p>
         <p>Weight: @AuthService.CurrentUser.Weight kg</p>
+        <p>BMI: @AuthService.CurrentUser.BMI</p>
         <button @onclick="Logout" class="btn btn-danger">Logout</button>
     </div>
 }

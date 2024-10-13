@@ -43,7 +43,6 @@ namespace Sirkelen.Shared.Services
         {
             if (_currentUser != null)
             {
-                // Fetch the latest user data from Firestore
                 var userFromDb = await firebaseService.GetUsers().ContinueWith(t => t.Result.FirstOrDefault(u => u.Id == _currentUser.Id));
                 
                 if (userFromDb != null)

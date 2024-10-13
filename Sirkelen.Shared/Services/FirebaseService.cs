@@ -17,7 +17,7 @@ namespace Sirkelen.Shared.Services
 
         public FirebaseService(string v)
         {
-            // Await the initialization properly
+            
             InitializeFirestore().GetAwaiter().GetResult();
         }
 
@@ -164,18 +164,24 @@ namespace Sirkelen.Shared.Services
 
             return messages;
         }
-
+        public async Task UpdateUserBMI(string userId, double bmi)
+        {
+            await EnsureInitialized();
+            var userRef = _firestoreDb.Collection("Users").Document(userId);
+            await userRef.UpdateAsync("BMI", bmi);
+        }
         private async Task EnsureInitialized()
         {
             if (!_isInitialized)
             {
                 Debug.WriteLine("Firestore is not initialized. Waiting...");
-                await Task.Delay(5000); // Wait for 5 seconds
+                await Task.Delay(5000);
                 if (!_isInitialized)
                 {
                     throw new InvalidOperationException("Firestore is not initialized.");
                 }
             }
         }
+        
     }
 }

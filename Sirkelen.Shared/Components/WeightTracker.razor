@@ -174,6 +174,8 @@
             await FirebaseService.AddWeightRecord(newRecord);
             WeightRecords.Add(newRecord);
             CurrentUser.Weight = NewWeight.Value;
+            CurrentUser.BMI = Math.Round(CurrentUser.Weight / Math.Pow(CurrentUser.Height / 100, 2), 1);
+            await FirebaseService.UpdateUserBMI(CurrentUser.Id, CurrentUser.BMI);
             WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
             NewWeight = null;
             StateHasChanged();
