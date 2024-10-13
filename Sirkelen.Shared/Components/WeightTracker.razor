@@ -138,6 +138,13 @@
 @code {
     private List<WeightRecord> WeightRecords;
     private double? NewWeight;
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await AddWeightRecord();
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
