@@ -38,8 +38,8 @@
         </div>
 
         <div class="weight-tracker-input-container">
-            <input @bind="NewWeight" type="number" step="0.1" min="0" placeholder="Enter your weight"
-                   class="weight-tracker-input"/>
+            <input @bind-value="NewWeight" @bind-value:event="oninput" @onkeydown="HandleKeyPress" 
+                type="number" step="0.1" min="0" placeholder="Enter your weight" class="weight-tracker-input"/>
             <button @onclick="AddWeightRecord" class="weight-tracker-button">Add</button>
         </div>
     }
@@ -138,6 +138,7 @@
 @code {
     private List<WeightRecord> WeightRecords;
     private double? NewWeight;
+
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
@@ -175,6 +176,7 @@
             CurrentUser.Weight = NewWeight.Value;
             WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
             NewWeight = null;
+            StateHasChanged();
         }
     }
 
