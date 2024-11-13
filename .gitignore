@@ -1,6 +1,6 @@
 Sirkelen/bin/
-Sirkelen/obj/
+Sirkelen/obj/*
 Sirkelen.Tests/bin/
 Sirkelen.Tests/obj/
-Sirkelen.Web/bin/
-Sirkelen.Web/obj/
+Sirkelen.Shared/bin/
+Sirkelen.Shared/obj/
