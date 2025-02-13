@@ -2,3 +2,5 @@ Sirkelen/bin/
 Sirkelen/obj/
 Sirkelen.Shared/bin/
 Sirkelen.Shared/obj/
+Sirkelen.Shared/ServiceAccount.json
+Sirkelen/Resources/Raw/ServiceAccount.json
