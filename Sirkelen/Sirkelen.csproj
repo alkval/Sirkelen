@@ -85,8 +85,6 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.WebView.Maui" Version="$(MauiVersion)" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
         <PackageReference Include="Microsoft.Maui.Essentials" Version="8.0.91" />
-        <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
-        <PackageReference Include="MongoDB.EntityFrameworkCore" Version="8.1.1" />
     </ItemGroup>
 
     <ItemGroup>
