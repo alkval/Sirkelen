@@ -21,7 +21,6 @@ public static MauiApp CreateMauiApp()
     builder.Services.AddTransient<User>();
     builder.Services.AddSingleton<FirebaseService>(provider => 
                 new FirebaseService("sirkelen-defba"));
-    //builder.Services.AddSingleton<DatabaseSeeder>();
     builder.Services.AddSingleton<SessionService>();
     builder.Services.AddSingleton<AuthenticationService>();
 
@@ -40,22 +39,5 @@ public static MauiApp CreateMauiApp()
 
     return app;
 }
-
-// private static async Task SeedDatabaseAsync(MauiApp app)
-// {
-//     try
-//     {
-//         var scope = app.Services.CreateScope();
-//         var databaseSeeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
-//         //await databaseSeeder.SeedUsers();
-//         //await databaseSeeder.SeedPersonalRecords();
-//         //await databaseSeeder.SeedWeightRecords();
-//     }
-//     catch (Exception ex)
-//     {
-//         // Handle exceptions or log errors here if needed
-//         Console.WriteLine($"Database seeding failed: {ex.Message}");
-//     }
-// }
 
 }
