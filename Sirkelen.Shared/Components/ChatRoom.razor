@@ -183,7 +183,6 @@ function initializeChatRoom() {
     private Dictionary<string, string> userProfilePictures = new Dictionary<string, string>();
     private string newMessageContent = string.Empty;
     private ElementReference chatMessagesRef;
-
     protected override async Task OnInitializedAsync()
     {
         await AuthService.InitializeAsync();
@@ -195,7 +194,25 @@ function initializeChatRoom() {
         }
 
         await LoadMessages();
+
+        FirebaseService.OnNewMessageReceived += async message =>
+        {
+            await InvokeAsync(() =>
+            {
+                if (!messages.Any(m => m.Id == message.Id))
+                {
+                    messages.Add(message);
+                    messages = messages.OrderBy(m => m.Time).ToList();
+                    StateHasChanged();
+                    _ = ScrollToBottom();
+                }
+            });
+        };
+
+        await FirebaseService.ListenForChatMessages();
     }
+
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

@@ -114,6 +114,29 @@ namespace Sirkelen.Shared.Services
             });
         }
 
+
+        public event Action<Message> OnNewMessageReceived;
+
+        public async Task ListenForChatMessages()
+        {
+            await EnsureInitialized();
+
+            var chatRef = _firestoreDb.Collection("ChatMessages");
+
+            chatRef.Listen(async snapshot =>
+            {
+                foreach (var doc in snapshot.Documents)
+                {
+                    var newMessage = doc.ConvertTo<Message>();
+                    Debug.WriteLine($"New message received: {newMessage.MessageContent}");
+
+                    await GetChatMessages();
+                    OnNewMessageReceived?.Invoke(newMessage);
+                }
+            });
+        }
+
+
         public async Task<List<WeightRecord>> GetWeightRecords(string userId)
         {
             await EnsureInitialized();
