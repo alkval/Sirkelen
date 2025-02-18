@@ -3,102 +3,269 @@
 @using Sirkelen.Shared.Models
 @using Sirkelen.Shared.Services
 @inject FirebaseService FirebaseService
+@using Microsoft.AspNetCore.Components.Forms
 @inject AuthenticationService AuthService
 
-<h3>Your Personal Records</h3>
+<div class="personal-records-page">
+    <h3 class="page-title">Your Personal Records</h3>
 
-@if (!AuthService.IsAuthenticated)
-{
-    <p>You need to log in to view your personal records.</p>
-}
-else
-{
-    <div>
-        @if (UserPersonalRecords == null)
-        {
-            <p>Loading...</p>
-        }
-        else if (UserPersonalRecords.Count == 0)
-        {
-            <p>No personal records found.</p>
-        }
-        else
-        {
-            <ul>
-                @foreach (var record in UserPersonalRecords)
-                {
-                    <li>
-                        @record.ExerciseName: @record.Weight kg, @record.Reps reps, @record.Sets sets, 
-                        <em>(@ConvertToOsloTime(record.Date).ToString("dd-MMMM-yyyy"))</em>
-                    </li>
-                }
-            </ul>
-        }
+    @if (!AuthService.IsAuthenticated)
+    {
+        <p class="login-message">You need to log in to view your personal records.</p>
+    }
+    else
+    {
+        <div class="content">
+            @if (UserPersonalRecords == null)
+            {
+                <p class="loading-message">Loading...</p>
+            }
+            else if (UserPersonalRecords.Count == 0)
+            {
+                <p class="no-records-message">No personal records found.</p>
+            }
+            else
+            {
+                <div class="records-list">
+                    @foreach (var record in UserPersonalRecords)
+                    {
+                        <div class="record-item">
+                            <div class="record-main">
+                                <span class="exercise-name">@record.ExerciseName</span>
+                                <span class="record-details">@record.Weight kg × @record.Reps reps × @record.Sets sets</span>
+                            </div>
+                            <span class="record-date">@ConvertToOsloTime(record.Date).ToString("dd-MMMM-yyyy")</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
 
-        <h4>Add New Personal Record</h4>
-        <input @bind="NewExerciseName" placeholder="Exercise Name" />
-        <input @bind="NewWeight" type="number" step="0.1" min="0" placeholder="Weight (kg)" />
-        <input @bind="NewReps" type="number" min="1" placeholder="Reps" />
-        <input @bind="NewSets" type="number" min="1" placeholder="Sets" />
-        <button @onclick="AddPersonalRecord">Add</button>
-    </div>
-}
+        <div class="input-container">
+            <input @bind-value="NewExerciseName" 
+                   @bind-value:event="oninput"
+                   placeholder="Exercise Name"
+                   class="input-field" />
+
+            <input @bind-value="NewWeight" 
+                   @bind-value:event="oninput"
+                   type="number" 
+                   step="0.1" 
+                   min="0" 
+                   placeholder="Weight (kg)"
+                   class="input-field number-input" />
+
+            <input @bind-value="NewReps" 
+                   @bind-value:event="oninput"
+                   type="number" 
+                   min="1" 
+                   placeholder="Reps"
+                   class="input-field number-input" />
+
+            <input @bind-value="NewSets" 
+                   @bind-value:event="oninput"
+                   type="number" 
+                   min="1" 
+                   placeholder="Sets"
+                   class="input-field number-input" />
+
+            <InputDate @bind-Value="NewDate" class="input-field" />
+
+            <button @onclick="AddPersonalRecord" class="add-button">Add</button>
+        </div>
+    }
+</div>
+
+<style>
+    .personal-records-page {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 20px;
+        background-color: #ffffff;
+    }
+    
+    .page-title {
+        color: #333;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .content {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-bottom: 120px;
+    }
+    
+    .records-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+    
+    .record-item {
+        background-color: #ffffff;
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        width: 100%;
+        max-width: 1200px;
+    }
+    
+    .record-main {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .exercise-name {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 4px;
+    }
+    
+    .record-details {
+        color: #666;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    
+    .record-date {
+        color: #999;
+        font-size: 0.9em;
+        white-space: nowrap;
+        margin-left: 15px;
+    }
+    
+    .input-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 4px;
+        padding: 4px;
+        background-color: white;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        align-items: center;
+        overflow-x: auto;
+        max-width: 100%;
+        height: 150px;
+    }
+    
+    .input-field {
+        flex: 1 1 100px;
+        min-width: 80px;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+    }
+    
+    .number-input {
+        text-align: center;
+    }
+    
+    .add-button {
+        flex: 0 0 auto;
+        background-color: #66aff8;
+        color: white;
+        border: none;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .add-button:hover {
+        background-color: #5599e6;
+    }
+    
+    .login-message, .loading-message, .no-records-message {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+        margin-top: 20px;
+    }
+    
+    /* Media query for smaller screens */
+    @@media (max-width: 600px) {
+        .input-container {
+            flex-direction: column;
+            height: auto;
+        }
+        
+        .input-field {
+            width: 100%;
+            flex: none;
+        }
+        
+        .add-button {
+            width: 100%;
+        }
+    }
+</style>
 
 @code {
-    private List<PersonalRecord> UserPersonalRecords; // Renamed from PersonalRecords
+    private List<PersonalRecord> UserPersonalRecords;
     private string NewExerciseName;
-    private double NewWeight;
-    private int NewReps;
-    private int NewSets;
+    private string NewWeight;
+    private string NewReps;
+    private string NewSets;
+    private DateTime NewDate = DateTime.Now;
 
     protected override async Task OnInitializedAsync()
     {
         if (AuthService.IsAuthenticated)
         {
-            // Get the personal records for the logged-in user
             var userId = AuthService.CurrentUser.Id;
             UserPersonalRecords = await FirebaseService.GetPersonalRecords(userId);
+            UserPersonalRecords = UserPersonalRecords.OrderByDescending(r => r.Date).ToList();
         }
     }
 
     private async Task AddPersonalRecord()
     {
-        if (AuthService.IsAuthenticated && !string.IsNullOrEmpty(NewExerciseName) && NewWeight > 0 && NewReps > 0 && NewSets > 0)
+        if (AuthService.IsAuthenticated && !string.IsNullOrEmpty(NewExerciseName))
         {
-            var userId = AuthService.CurrentUser.Id;
-
-            // Create a new personal record
-            var newRecord = new PersonalRecord
+            if (double.TryParse(NewWeight, out double weight) &&
+                int.TryParse(NewReps, out int reps) &&
+                int.TryParse(NewSets, out int sets) &&
+                weight > 0 && reps > 0 && sets > 0)
             {
-                UserId = userId,
-                ExerciseName = NewExerciseName,
-                Weight = NewWeight,
-                Reps = NewReps,
-                Sets = NewSets,
-                Date = DateTime.UtcNow
-            };
+                var userId = AuthService.CurrentUser.Id;
+                var newRecord = new PersonalRecord
+                {
+                    UserId = userId,
+                    ExerciseName = NewExerciseName,
+                    Weight = weight,
+                    Reps = reps,
+                    Sets = sets,
+                    Date = NewDate.ToUniversalTime()
+                };
 
-            // Add the record to Firestore
-            await FirebaseService.AddPersonalRecord(newRecord);
+                await FirebaseService.AddPersonalRecord(newRecord);
+                UserPersonalRecords.Insert(0, newRecord);
 
-            // Update the personal records list
-            UserPersonalRecords.Add(newRecord);
-
-            // Clear the input fields
-            NewExerciseName = string.Empty;
-            NewWeight = 0;
-            NewReps = 0;
-            NewSets = 0;
+                // Clear inputs
+                NewExerciseName = string.Empty;
+                NewWeight = string.Empty;
+                NewReps = string.Empty;
+                NewSets = string.Empty;
+                NewDate = DateTime.Now;
+            }
         }
     }
 
     private DateTime ConvertToOsloTime(DateTime utcTime)
     {
-        // Define the Oslo timezone
         TimeZoneInfo osloTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
-        
-        // Convert UTC time to Oslo time
-        DateTime osloTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
-        return osloTime;
+        return TimeZoneInfo.ConvertTimeFromUtc(utcTime, osloTimeZone);
     }
 }
