@@ -25,15 +25,18 @@
             }
             else
             {
-                <div class="weight-records-list">
-                    @foreach (var record in WeightRecords)
-                    {
-                        <div class="weight-record">
-                            <span class="record-date">@record.Date.Value.ToString("dd-MMMM-yyyy")</span>
-                            <span class="record-weight">@record.Weight kg</span>
-                        </div>
-                    }
-                </div>
+            <div class="weight-records-list">
+                @foreach (var record in WeightRecords)
+                {
+                    <div class="weight-record">
+                        <span class="record-date">@record.Date.Value.ToString("dd-MMMM-yyyy")</span>
+                        <span class="record-weight">
+                            @record.Weight kg
+                            <button class="delete-record" @onclick="() => ConfirmAndDelete(record)">X</button>
+                        </span>
+                    </div>
+                }
+            </div>
             }
         </div>
 
@@ -46,6 +49,25 @@
 </div>
 
 <style>
+    .record-weight {
+        font-weight: bold;
+        color: #66aff8;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    .delete-record {
+        background-color: transparent;
+        border: none;
+        color: grey;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 0;
+    }
+
+
     .weight-tracker-page {
         display: flex;
         flex-direction: column;
@@ -90,11 +112,6 @@
 
     .record-date {
         color: #666;
-    }
-
-    .record-weight {
-        font-weight: bold;
-        color: #66aff8;
     }
 
     .weight-tracker-input-container {
@@ -181,6 +198,26 @@
             StateHasChanged();
         }
     }
+
+    private async Task ConfirmAndDelete(WeightRecord record)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure?🤔");
+        if (confirmed)
+        {
+            await DeleteWeightRecord(record);
+        }
+    }
+
+    private async Task DeleteWeightRecord(WeightRecord record)
+    {
+        if (AuthService.IsAuthenticated)
+        {
+            await FirebaseService.DeleteWeightRecord(record.Id, AuthService.CurrentUser.Id);
+            WeightRecords.Remove(record);
+            StateHasChanged();
+        }
+    }
+
 
     private async Task ResizeForKeyboard()
     {
