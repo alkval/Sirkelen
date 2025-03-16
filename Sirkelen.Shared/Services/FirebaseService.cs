@@ -1,9 +1,6 @@
 using Google.Cloud.Firestore;
 using Google.Cloud.Firestore.V1;
 using Google.Apis.Auth.OAuth2;
-using Grpc.Auth;
-using System.IO;
-using System.Threading.Tasks;
 using Sirkelen.Shared.Models;
 using Microsoft.Maui.Storage;
 using System.Diagnostics;
@@ -89,6 +86,16 @@ namespace Sirkelen.Shared.Services
             await userRef.UpdateAsync("PersonalRecordIds", FieldValue.ArrayUnion(recordRef.Id));
         }
 
+        public async Task DeletePersonalRecord(string recordId, string userId)
+        {
+            await EnsureInitialized();
+            
+            var recordRef = _firestoreDb.Collection("PersonalRecords").Document(recordId);
+            await recordRef.DeleteAsync();
+            
+            Debug.WriteLine($"Personal record {recordId} deleted successfully.");
+        }
+
         public async Task<List<PersonalRecord>> GetPersonalRecords(string userId)
         {
             await EnsureInitialized();
@@ -112,6 +119,19 @@ namespace Sirkelen.Shared.Services
                 { "WeightRecordIds", FieldValue.ArrayUnion(recordRef.Id) },
                 { "Weight", record.Weight }
             });
+        }
+
+        public async Task DeleteWeightRecord(string weightRecordId, string userId)
+        {
+            await EnsureInitialized();
+            
+            var recordRef = _firestoreDb.Collection("WeightRecords").Document(weightRecordId);
+            await recordRef.DeleteAsync();
+
+            var userRef = _firestoreDb.Collection("Users").Document(userId);
+            await userRef.UpdateAsync("WeightRecordIds", FieldValue.ArrayRemove(weightRecordId));
+            
+            Debug.WriteLine($"Weight record {weightRecordId} deleted successfully.");
         }
 
 

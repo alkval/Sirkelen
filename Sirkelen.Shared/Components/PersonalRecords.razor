@@ -5,6 +5,7 @@
 @inject FirebaseService FirebaseService
 @using Microsoft.AspNetCore.Components.Forms
 @inject AuthenticationService AuthService
+@inject IJSRuntime JSRuntime
 
 <div class="personal-records-page">
     <h3 class="page-title">Your Personal Records</h3>
@@ -32,9 +33,14 @@
                         <div class="record-item">
                             <div class="record-main">
                                 <span class="exercise-name">@record.ExerciseName</span>
-                                <span class="record-details">@record.Weight kg × @record.Reps reps × @record.Sets sets</span>
+                                <span class="record-details">
+                                    @record.Weight kg × @record.Reps reps × @record.Sets sets
+                                </span>
                             </div>
-                            <span class="record-date">@ConvertToOsloTime(record.Date).ToString("dd-MMMM-yyyy")</span>
+                            <span class="record-date">
+                                @ConvertToOsloTime(record.Date).ToString("dd-MMMM-yyyy")
+                                <button class="delete-record" @onclick="() => ConfirmAndDeletePersonalRecord(record)">X</button>
+                            </span>
                         </div>
                     }
                 </div>
@@ -131,6 +137,8 @@
         color: #666;
         font-size: 0.9em;
         white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
     }
     
     .record-date {
@@ -138,6 +146,17 @@
         font-size: 0.9em;
         white-space: nowrap;
         margin-left: 15px;
+    }
+    
+    .delete-record {
+        background-color: transparent;
+        border: none;
+        color: gray;
+        font-weight: bold;
+        font-size: 14px;
+        cursor: pointer;
+        margin-left: 10px;
+        padding: 0;
     }
     
     .input-container {
@@ -194,7 +213,6 @@
         margin-top: 20px;
     }
     
-    /* Media query for smaller screens */
     @@media (max-width: 600px) {
         .input-container {
             flex-direction: column;
@@ -260,6 +278,25 @@
                 NewSets = string.Empty;
                 NewDate = DateTime.Now;
             }
+        }
+    }
+
+    private async Task ConfirmAndDeletePersonalRecord(PersonalRecord record)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are you sure?🤔");
+        if (confirmed)
+        {
+            await DeletePersonalRecord(record);
+        }
+    }
+
+    private async Task DeletePersonalRecord(PersonalRecord record)
+    {
+        if (AuthService.IsAuthenticated)
+        {
+            await FirebaseService.DeletePersonalRecord(record.Id, AuthService.CurrentUser.Id);
+            UserPersonalRecords.Remove(record);
+            StateHasChanged();
         }
     }
 
