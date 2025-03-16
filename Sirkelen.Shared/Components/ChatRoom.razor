@@ -5,6 +5,7 @@
 @inject FirebaseService FirebaseService
 @inject AuthenticationService AuthService
 @inject NavigationManager NavigationManager
+@inject AppUpdateService UpdateService
 @inject IJSRuntime JSRuntime
 
 <script>
@@ -19,6 +20,7 @@ function initializeChatRoom() {
     const chatMessages = document.querySelector('.chat-messages');
 }
 </script>
+<UpdateNotification />
 <ScrollView>
 <div class="chatroom-container">
     <div class="chat-messages" @ref="chatMessagesRef">
@@ -67,8 +69,8 @@ function initializeChatRoom() {
     .chatroom-container {
         display: flex;
         flex-direction: column;
-        height: calc(100vh - 4.5rem);
-        margin: 0;
+        height: calc(100vh - 3.5rem);
+        margin: -20px 0 0 0;
     }
 
     .chat-messages {
@@ -174,6 +176,8 @@ function initializeChatRoom() {
         }
 
         await LoadMessages();
+
+        await UpdateService.CheckForUpdates();
 
         FirebaseService.OnNewMessageReceived += async message =>
         {

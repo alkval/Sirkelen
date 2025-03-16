@@ -75,6 +75,27 @@ namespace Sirkelen.Shared.Services
             }
             return users;
         }
+
+        public async Task<VersionInfo> GetLatestVersionInfo()
+        {
+            await EnsureInitialized();
+            
+            try
+            {
+                var configDoc = await _firestoreDb.Collection("Config").Document("VersionInfo").GetSnapshotAsync();
+                if (configDoc.Exists)
+                {
+                    return configDoc.ConvertTo<VersionInfo>();
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error getting version info: {ex.Message}");
+                return null;
+            }
+        }
+        
         public async Task AddPersonalRecord(PersonalRecord record)
         {
             await EnsureInitialized();
