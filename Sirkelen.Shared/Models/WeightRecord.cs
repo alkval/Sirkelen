@@ -1,5 +1,3 @@
-using System;
-using System.ComponentModel.DataAnnotations;
 using Google.Cloud.Firestore;
 namespace Sirkelen.Shared.Models;
 

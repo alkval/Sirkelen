@@ -23,7 +23,7 @@ public static MauiApp CreateMauiApp()
                 new FirebaseService("sirkelen-defba"));
     builder.Services.AddSingleton<SessionService>();
     builder.Services.AddSingleton<AuthenticationService>();
-
+    builder.Services.AddSingleton<AppUpdateService>();
 #if DEBUG
     builder.Services.AddBlazorWebViewDeveloperTools();
     builder.Logging.AddDebug();
