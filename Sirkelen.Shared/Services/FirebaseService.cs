@@ -247,5 +247,108 @@ namespace Sirkelen.Shared.Services
             }
         }
         
+        public async Task<CalorieEntry> GetCalorieEntryForDate(string userId, DateTime date)
+        {
+            await EnsureInitialized();
+            DateTime dateUtcStart = date.Date.ToUniversalTime();
+            Timestamp targetTimestamp = Timestamp.FromDateTime(dateUtcStart);
+
+            var snapshot = await _firestoreDb.Collection("CalorieEntries")
+                .WhereEqualTo("UserId", userId)
+                .WhereEqualTo("Date", targetTimestamp)
+                .Limit(1)
+                .GetSnapshotAsync();
+
+            if (snapshot.Documents.Count > 0)
+            {
+                var doc = snapshot.Documents[0];
+                var entry = doc.ConvertTo<CalorieEntry>();
+                entry.Id = doc.Id; 
+                return entry;
+            }
+            return null; 
+        }
+        public async Task AddOrUpdateCaloriesForDate(string userId, DateTime date, int caloriesToAdd)
+        {
+            await EnsureInitialized();
+            DateTime dateUtcStart = date.Date.ToUniversalTime();
+            Timestamp targetTimestamp = Timestamp.FromDateTime(dateUtcStart);
+            var collectionRef = _firestoreDb.Collection("CalorieEntries");
+
+            var query = collectionRef
+                .WhereEqualTo("UserId", userId)
+                .WhereEqualTo("Date", targetTimestamp)
+                .Limit(1);
+
+            var snapshot = await query.GetSnapshotAsync();
+
+            if (snapshot.Documents.Count > 0)
+            {
+                var docRef = snapshot.Documents[0].Reference;
+                await docRef.UpdateAsync("TotalCalories", FieldValue.Increment(caloriesToAdd));
+                Debug.WriteLine($"Updated calories for {userId} on {date.ToShortDateString()} by {caloriesToAdd}");
+            }
+            else
+            {
+                var newEntry = new CalorieEntry
+                {
+                    UserId = userId,
+                    Date = targetTimestamp,
+                    TotalCalories = caloriesToAdd
+                };
+                await collectionRef.AddAsync(newEntry);
+                Debug.WriteLine($"Created new calorie entry for {userId} on {date.ToShortDateString()} with {caloriesToAdd} calories");
+            }
+        }
+        public async Task<List<CalorieEntry>> GetCalorieEntriesForDateRange(string userId, DateTime startDate, DateTime endDate)
+        {
+            await EnsureInitialized();
+            Timestamp startTimestamp = Timestamp.FromDateTime(startDate.Date.ToUniversalTime());
+            Timestamp endTimestamp = Timestamp.FromDateTime(endDate.Date.ToUniversalTime());
+
+            var snapshot = await _firestoreDb.Collection("CalorieEntries")
+                .WhereEqualTo("UserId", userId)
+                .WhereGreaterThanOrEqualTo("Date", startTimestamp)
+                .WhereLessThanOrEqualTo("Date", endTimestamp)
+                .OrderBy("Date")
+                .GetSnapshotAsync();
+
+            var entries = new List<CalorieEntry>();
+            foreach (var document in snapshot.Documents)
+            {
+                var entry = document.ConvertTo<CalorieEntry>();
+                entry.Id = document.Id;
+                entries.Add(entry);
+            }
+            return entries;
+        }
+        public async Task<Dictionary<DateTime, int>> GetAllDailyTotalsAsync(string userId)
+        {
+            await EnsureInitialized();
+            var dailyTotals = new Dictionary<DateTime, int>();
+
+            try
+            {
+                var snapshot = await _firestoreDb.Collection("CalorieEntries")
+                    .WhereEqualTo("UserId", userId)
+                    .OrderBy("Date")
+                    .GetSnapshotAsync();
+
+                foreach (var document in snapshot.Documents)
+                {
+                    var entry = document.ConvertTo<CalorieEntry>();
+                    DateTime entryDateUtc = entry.Date.ToDateTime().Date;
+                    dailyTotals[entryDateUtc] = entry.TotalCalories;
+                    Debug.WriteLine($"GetAllDailyTotalsAsync: Added UTC Date Key: {entryDateUtc.ToString("yyyy-MM-dd")}, Value: {entry.TotalCalories}");
+                }
+                Debug.WriteLine($"Fetched {dailyTotals.Count} daily total entries for user {userId}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error fetching all daily totals for user {userId}: {ex.Message}");
+            }
+
+            return dailyTotals;
+        }
     }
 }

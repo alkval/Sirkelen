@@ -2,6 +2,7 @@
 @namespace Sirkelen.Shared.Components
 @using Sirkelen.Shared.Models
 @using Sirkelen.Shared.Services
+@using System.Diagnostics
 @inject FirebaseService FirebaseService
 @inject AuthenticationService AuthService
 @inject IJSRuntime JSRuntime
@@ -155,7 +156,9 @@
 
 @code {
     private List<WeightRecord> WeightRecords;
+    private bool isLoading = true;
     private double? NewWeight;
+    private bool _hasLoadedData = false;
 
     private async Task HandleKeyPress(KeyboardEventArgs e)
     {
@@ -169,9 +172,24 @@
     {
         if (AuthService.IsAuthenticated)
         {
+            isLoading = true;
+            StateHasChanged();
+
             var userId = AuthService.CurrentUser.Id;
             WeightRecords = await FirebaseService.GetWeightRecords(userId);
             WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
+
+            _hasLoadedData = true;
+            isLoading = false;
+            StateHasChanged();
+        }
+        else if (!AuthService.IsAuthenticated)
+        {
+            isLoading = false;
+        }
+        else
+        {
+            isLoading = false;
         }
     }
 
@@ -180,7 +198,7 @@
         if (AuthService.IsAuthenticated && NewWeight.HasValue && NewWeight > 0)
         {
             var userId = AuthService.CurrentUser.Id;
-            var CurrentUser = AuthService.CurrentUser;
+            var currentUser = AuthService.CurrentUser;
 
             var newRecord = new WeightRecord
             {
@@ -189,14 +207,32 @@
                 Date = DateTime.UtcNow
             };
 
-            await FirebaseService.AddWeightRecord(newRecord);
+            WeightRecords ??= new List<WeightRecord>();
             WeightRecords.Add(newRecord);
-            CurrentUser.Weight = NewWeight.Value;
-            CurrentUser.BMI = Math.Round(CurrentUser.Weight / Math.Pow(CurrentUser.Height / 100, 2), 1);
-            await FirebaseService.UpdateUserBMI(CurrentUser.Id, CurrentUser.BMI);
             WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
-            NewWeight = null;
             StateHasChanged();
+
+            var weightToAdd = NewWeight.Value;
+            NewWeight = null;
+
+            try
+            {
+                await FirebaseService.AddWeightRecord(newRecord);
+
+                currentUser.Weight = weightToAdd;
+                currentUser.BMI = Math.Round(currentUser.Weight / Math.Pow(currentUser.Height / 100, 2), 1);
+                await FirebaseService.UpdateUserBMI(currentUser.Id, currentUser.BMI);
+                await AuthService.RefreshCurrentUserAsync(FirebaseService);
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error adding weight record: {ex.Message}");
+                WeightRecords.Remove(newRecord);
+                WeightRecords = WeightRecords.OrderBy(record => record.Date).ToList();
+                StateHasChanged();
+            }
         }
     }
 
@@ -217,16 +253,5 @@
             WeightRecords.Remove(record);
             StateHasChanged();
         }
-    }
-
-
-    private async Task ResizeForKeyboard()
-    {
-        await JSRuntime.InvokeVoidAsync("resizeForKeyboard");
-    }
-
-    private async Task ResetLayout()
-    {
-        await JSRuntime.InvokeVoidAsync("resetLayout");
     }
 }

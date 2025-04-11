@@ -1,0 +1,430 @@
+@page "/calorietracker"
+@using Sirkelen.Shared.Models
+@using Sirkelen.Shared.Services
+@using System.Globalization
+@using System.Diagnostics
+@using Microsoft.Extensions.Logging
+@inject FirebaseService FirebaseService
+@inject AuthenticationService AuthService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
+@inject ILogger<CalorieTracker> Logger
+
+<div class="calorie-tracker-container">
+
+    @if (!AuthService.IsAuthenticated)
+    {
+        <p>Please <a href="/login">login</a> to track calories.</p>
+    }
+    else
+    {
+        <h3>Calorie Tracker</h3> 
+
+        <div class="date-navigation">
+            <button class="nav-button" @onclick="GoToPreviousDay">◀</button>
+            <span class="current-date">@currentDate.ToString("dddd, dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
+            <button class="nav-button" @onclick="GoToNextDay" disabled="@IsTodayOrFuture()">▶</button>
+        </div>
+
+        @if (isLoading)
+        {
+            <p>Loading calories...</p>
+        }
+        else
+        {
+            <div class="calorie-display">
+                <h2>Total Calories: @totalCaloriesForDay</h2>
+            </div>
+
+            <div class="calorie-input-section">
+                <input type="number"
+                       class="calorie-input"
+                       @bind="newCalorieInput"
+                       @bind:event="oninput"
+                       placeholder="Enter calories..."
+                       @onkeyup="HandleKeyPress"
+                       min="1" />
+                <button class="add-button" @onclick="AddCalories" disabled="@(newCalorieInput <= 0 || isAdding)">
+                    @(isAdding ? "Adding..." : "Add Calories")
+                </button>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="error-message">@errorMessage</div>
+                }
+            </div>
+
+             <div class="action-buttons">
+                 <button class="view-calendar-button" @onclick="ToggleCalendarView">
+                    @(showCalendar ? "Hide Calendar" : "View Calendar")
+                 </button>
+                 @if (currentDate.Date != DateTime.Today)
+                 {
+                      <button class="go-today-button" @onclick="GoToToday">Go to Today</button>
+                 }
+            </div>
+
+             @if (showCalendar)
+             {
+                 <div class="calendar-view">
+                     <h3>Calorie Calendar</h3>
+                      @if (isCalendarLoading)
+                      {
+                          <p>Loading calendar...</p>
+                      }
+                      else if (dailyTotals == null || !dailyTotals.Any())
+                      {
+                          <p>No calorie data recorded yet.</p>
+                      }
+                      else
+                      {
+                          var firstDate = dailyTotals.Keys.Any() ? dailyTotals.Keys.Min() : DateTime.MinValue;
+                          var lastDate = dailyTotals.Keys.Any() ? dailyTotals.Keys.Max() : DateTime.MinValue;
+                          @if(firstDate != DateTime.MinValue) {
+                              <h4>@firstDate.ToString("MMMM yyyy") - @lastDate.ToString("MMMM yyyy")</h4>
+                          }
+                          <div class="calendar-grid">
+                              @foreach (var kvp in dailyTotals.OrderBy(kv => kv.Key))
+                              {
+                                   <button class="calendar-day @(kvp.Key == currentDate.ToUniversalTime().Date ? "selected-day" : "")"
+                                        @onclick="() => GoToDateFromCalendar(kvp.Key)">
+                                            <span class="calendar-day-date">@kvp.Key.ToLocalTime().ToString("MMM dd")</span>
+                                           <span class="calendar-day-calories">@kvp.Value kcal</span>
+                                   </button>
+                              }
+                          </div>
+                      }
+                  </div>
+             }
+
+        }
+    }
+</div>
+<style>
+    .calorie-tracker-container {
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
+        font-family: sans-serif;
+    }
+
+    h3 { 
+       text-align: center;
+       color: #333;
+       margin-bottom: 15px;
+    }
+
+    .date-navigation {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .current-date {
+        font-size: 1.2em;
+        font-weight: bold;
+        text-align: center; 
+        flex-grow: 1;
+    }
+
+    .nav-button, .add-button, .view-calendar-button, .go-today-button, .calendar-day, .delete-entry-button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        background-color: #66aff8;
+        color: white;
+        font-size: 1em;
+        white-space: nowrap;
+    }
+    .nav-button {
+        flex-shrink: 0;
+    }
+    .nav-button:disabled, .add-button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+     .go-today-button {
+         background-color: #4CAF50; 
+     }
+     .view-calendar-button {
+         background-color: #ff9800;
+     }
+     .delete-entry-button { 
+         background-color: #f44336;
+         padding: 2px 6px;
+         font-size: 0.8em;
+         margin-left: 10px;
+     }
+
+
+    .calorie-display {
+        text-align: center;
+        margin-bottom: 25px;
+        background-color: #e7f3fe;
+        padding: 15px;
+        border-radius: 8px;
+    }
+    .calorie-display h2 {
+         margin: 0;
+         color: #0b5a9d;
+         font-size: 1.8em;
+    }
+
+    .calorie-input-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .calorie-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        min-width: 150px;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.9em;
+        margin-top: 5px;
+        flex-basis: 100%;
+        text-align: left; 
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .calendar-view {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        background-color: #fafafa;
+    }
+    .calendar-view h3, .calendar-view h4 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+     .calendar-grid {
+         display: flex;
+         flex-wrap: wrap;
+         gap: 8px;
+         justify-content: center;
+     }
+
+    .calendar-day {
+         background-color: #e0e0e0;
+         color: #333;
+         padding: 10px;
+         min-width: 90px;
+         text-align: center;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         border: 1px solid #ccc;
+         cursor: pointer;
+         height: 60px; 
+         justify-content: center;
+     }
+     .calendar-day.selected-day {
+         background-color: #66aff8;
+         color: white;
+         border: 1px solid #0b5a9d;
+         font-weight: bold;
+     }
+     .calendar-day-date {
+         font-size: 0.9em;
+         font-weight: bold;
+     }
+     .calendar-day-calories {
+         font-size: 0.8em;
+     }
+
+</style>
+
+@code {
+    private DateTime currentDate = DateTime.Today;
+    private int totalCaloriesForDay = 0;
+    private int newCalorieInput = 0;
+    private string errorMessage = string.Empty;
+    private bool isAdding = false;
+    private bool isLoading = true;
+
+    private bool showCalendar = false;
+    private bool isCalendarLoading = false;
+    private Dictionary<DateTime, int>? dailyTotals;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!AuthService.IsAuthenticated)
+        {
+             NavigationManager.NavigateTo("/login");
+             return;
+        }
+
+        currentDate = DateTime.Today;
+        await LoadDataForCurrentDate();
+    }
+
+    private async Task LoadDataForCurrentDate()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+        totalCaloriesForDay = 0;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            var entry = await FirebaseService.GetCalorieEntryForDate(AuthService.CurrentUser.Id, currentDate);
+            totalCaloriesForDay = entry?.TotalCalories ?? 0;
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Error loading data for {CurrentDate}", currentDate);
+            errorMessage = "Failed to load calorie data.";
+            totalCaloriesForDay = 0;
+        }
+        finally
+        {
+             isLoading = false;
+             await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task GoToPreviousDay()
+    {
+        currentDate = currentDate.AddDays(-1);
+        await LoadDataForCurrentDate();
+    }
+
+    private async Task GoToNextDay()
+    {
+        if (currentDate.Date < DateTime.Today)
+        {
+            currentDate = currentDate.AddDays(1);
+            await LoadDataForCurrentDate();
+        }
+    }
+
+     private async Task GoToToday()
+     {
+         if (currentDate.Date != DateTime.Today) {
+            currentDate = DateTime.Today;
+            await LoadDataForCurrentDate();
+         }
+     }
+
+    private bool IsTodayOrFuture()
+    {
+        return currentDate.Date >= DateTime.Today;
+    }
+
+    private async Task AddCalories()
+    {
+        if (newCalorieInput <= 0)
+        {
+            errorMessage = "Please enter a positive calorie amount.";
+            return;
+        }
+        if (isAdding) return; 
+
+        isAdding = true;
+        errorMessage = string.Empty;
+        await InvokeAsync(StateHasChanged);
+
+        try
+        {
+            await FirebaseService.AddOrUpdateCaloriesForDate(AuthService.CurrentUser.Id, currentDate, newCalorieInput);
+
+            totalCaloriesForDay += newCalorieInput;
+            newCalorieInput = 0;
+            await InvokeAsync(StateHasChanged);
+
+             _ = LoadDataForCurrentDate();
+
+            if (showCalendar)
+            {
+                _ = LoadCalendarTotals();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Error adding calories");
+            errorMessage = "Failed to add calories. Please try again.";
+             await LoadDataForCurrentDate(); 
+        }
+        finally
+        {
+            isAdding = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await AddCalories();
+        }
+    }
+
+     private async Task ToggleCalendarView()
+     {
+         showCalendar = !showCalendar;
+         if (showCalendar)
+         {
+             await LoadCalendarTotals();
+         } else {
+             dailyTotals = null;
+             if(isLoading) {
+                 await LoadDataForCurrentDate();
+             }
+         }
+         await InvokeAsync(StateHasChanged);
+     }
+
+    private async Task LoadCalendarTotals()
+    {
+        isCalendarLoading = true;
+        dailyTotals = null;
+        await InvokeAsync(StateHasChanged);
+        try
+        {
+            dailyTotals = await FirebaseService.GetAllDailyTotalsAsync(AuthService.CurrentUser.Id);
+        }
+        catch (Exception ex)
+        {
+            Logger?.LogError(ex, "Error loading calendar totals");
+            errorMessage = "Failed to load calendar data.";
+            dailyTotals = new Dictionary<DateTime, int>();
+        }
+        finally
+        {
+            Debug.WriteLine($"LoadCalendarTotals: Final dailyTotals count: {dailyTotals?.Count ?? 0}");
+            if (dailyTotals != null && dailyTotals.Any()) {
+                Debug.WriteLine($"LoadCalendarTotals: First key in final dictionary: {dailyTotals.Keys.First()}");
+            }
+            isCalendarLoading = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    private async Task GoToDateFromCalendar(DateTime date)
+    {
+        currentDate = date.ToLocalTime(); 
+        showCalendar = false;
+        dailyTotals = null;
+        await LoadDataForCurrentDate();
+    }
+
+}
